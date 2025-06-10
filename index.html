@@ -3,200 +3,91 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-    <title>Virtual Lab</title>
+    <title>Scheduling Algorithms</title>
+    <link rel="icon" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
 <body>
-    <section class="header">
-        <nav>
-            <a href="index.html">OPERATING SYSTEM</a>
-            <div class="nav-links" id="navLinks">
-                <i class="fas fa-window-close" onclick="hideMenu()"></i>
-                <ul>
-                    <li><a href="index.html">HOME</a></li>
-                    <li><a href="docs.html">DOCS</a></li>
-                    <li><a href="./backend/ganttcharts.html">SIMULATOR</a></li>
-                    <li><a href="about.html">ABOUT</a></li>
 
-                </ul>
-            </div>
-            <i class="fas fa-bars" onclick="showMenu()"></i>
-        </nav>
-
-        <div class="text-box">
-            <h1>
-                CPU Scheduling Simulator
-            </h1>
-            <p>
-                An interactive virtual lab for all types of scheduling algorithms designed to enhance your understanding through hands-on simulation.
-
-                <br>Begin the simulation now!
-            </p>
-            <a href="docs.html" class="hero-btn">START</a>
+    <h1>Scheduling Algorithms</h1>
+    <h3>Instructions :</h3>
+    <ol class="instructions">
+        <li>Tiebreaker is Process ID.</li>
+        <li>When burst time is criteria, total burst time is taken into consideration.</li>
+        <li>Context Switch not considered at start and end of processes.</li>
+    </ol>
+    <h3>Preferences :</h3>
+    <ol class="preferences">
+        <li>
+            Priority : 1 is
+            <button id="priority-toggle-btn">
+                <span id="priority-preference">high</span>
+                <i class="fa fa-refresh"></i>
+            </button>
+        </li>
+        <form id="algorithms-form">
+            <label for="algo"><h3>Algorithms : </h3></label>
+            <select name="algo" id="algo">
+                <option value="fcfs">First Come First Serve (FCFS)</option>
+                <option value="sjf">Shortest Job First (SJF)</option>
+                <option value="ljf">Longest Job First (LJF)</option>
+                <option value="srtf">Shortest Remaining Job First (SRTF)</option>
+                <option value="lrtf">Longest Remaining Job First (LRTF)</option>
+                <option value="rr">Round Robin</option>
+                <option value="pnp">Priority (Non Preemptive)</option>
+                <option value="pp">Priority (Preemptive)</option>
+                <option value="hrrn">Highest Response Ratio Next (HRRN)</option>
+            </select>
+        </form>
+        <br>
+        <table class="main-table">
+            <thead>
+                <tr>
+                    <th class="process-id">Process ID</th>
+                    <th class="priority hide">Priority</th>
+                    <th class="arrival-time">Arrival Time</th>
+                    <th class="process-time" colspan="1">Process Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="process-id" rowspan="2">P1</td>
+                    <td class="priority hide" rowspan="2"><input type="number" min="1" step="1" value="1"></td>
+                    <td class="arrival-time" rowspan="2"><input type="number" min="0" step="1" value="0"> </td>
+                    <td class="process-time cpu process-heading" colspan="">CPU</td>
+                    <td class="process-btn"><button type="button" class="add-process-btn">+</button></td>
+                    <td class="process-btn"><button type="button" class="remove-process-btn">-</button></td>
+                </tr>
+                <tr>
+                    <td class="process-time cpu process-input"><input type="number" min="1" step="1" value="1"> </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <button type="button" class="add-btn">Add Process</button>
+        <button type="button" class="remove-btn">Delete Process</button>
+        <div id="context-switch-div">
+            <br>
+            <label for="context-switch">Context Switch Time : </label>
+            <input type="number" name="Context Switch" id="context-switch" min="0" step="1" value="0">
         </div>
-    </section>
-
-    <section class="course">
-        <h1>Need of Algorithm</h1>
-        <p>Main purposes of CPU Scheduling Algorithm which is listed below</p>
-
-        <div class="row" data-aos="zoom-in-up">
-            <div class="course-colomn" >
-                <h3>Optimal CPU Utilization</h3>
-                <p>CPU scheduling ensures that the processor remains active by assigning tasks to it even when others are waiting for resources like I/O. This approach prevents CPU idling and aims to use the CPU to its fullest potential.</p>
-            </div>
-            <div class="course-colomn" >
-                <h3>Maximum Performance</h3>
-                <p>To achieve peak efficiency, the CPU should ideally remain busy all the time, avoiding any idle cycles. In real-world systems, CPU usage typically ranges between 40% in low-load conditions to up to 90% under heavy workloads.</p>
-            </div>
-            <div class="course-colomn" >
-                <h3>Reduced Processing Time</h3>
-                <p>Different scheduling algorithms are tailored to specific needs. By selecting the appropriate one, we can significantly reduce key performance metrics such as waiting time, response time, and turnaround time. For example, minimizing turnaround time is possible when most processes complete their CPU bursts within a single time quantum.</p>
-
-            </div>
+        <div id="time-quantum" class="hide">
+            <br>
+            <label for="tq">Time Quantum : </label>
+            <input type="number" name="Time Quantum" id="tq" min="1" step="1" value="1">
         </div>
-    </section>
+        <br>
+        <button type="button" id="calculate">Calculate</button>
+        <button type="button" id="reset" onClick="window.location.reload();">Reset</button>
+        <div id="output"></div>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+        <script src="script.js"></script>
 
-    
-    <section id="blog">
-        <div class="blog-heading">
-            <!-- <span>My Recent Post</span> -->
-            <h1>Popular Blogs</h1>
-        </div>
-
-        <div class="blog-container" data-aos="zoom-in-up">
-            <div class="blog-box">
-                <div class="blog-img">
-                    <img src="./images/CPU Scheduling_3.PNG" alt="Blog">
-                </div>
-
-                <div class="blog-text">
-                    <span>18 July /Operating System</span>
-                    <a href="https://www.fusion-reactor.com/blog/multithreading-and-multiprocessing/#:~:text=A%20multiprocessing%20system%20has%20more,runs%20parallel%20to%20each%20other." class="blog-title">Multithreading vs Multiprocessing?</a>
-                    <p>In Multiprocessing, Many processes are executed simultaneously. While in multithreading, many threads of...</p>
-                    <a href="https://www.fusion-reactor.com/blog/multithreading-and-multiprocessing/#:~:text=A%20multiprocessing%20system%20has%20more,runs%20parallel%20to%20each%20other." >Read More</a>
-                </div>
-            </div>
-
-            <div class="blog-box">
-                <div class="blog-img">
-                    <img src="./images/CPU Scheduling_4.PNG" alt="Blog">
-                </div>
-
-                <div class="blog-text">
-                    <span>29 Jan /Operating System</span>
-                    <a href="https://www.eletimes.com/microprocessor-vs-microcontroller-what-is-the-difference#:~:text=Ultimately%2C%20microcontrollers%20and%20microprocessors%20are,that%20connects%20to%20external%20peripherals." class="blog-title">Microcontroller vs Microprocessor</a>
-                    <p>microcontrollers and microprocessors are different ways of organizing and optimizing a...</p>
-                    <a href="https://www.eletimes.com/microprocessor-vs-microcontroller-what-is-the-difference#:~:text=Ultimately%2C%20microcontrollers%20and%20microprocessors%20are,that%20connects%20to%20external%20peripherals." >Read More</a>
-                </div>
-            </div>
-
-            <div class="blog-box">
-                <div class="blog-img">
-                    <img src="./images/CPU Scheduling_1.PNG" alt="Blog">
-                </div>
-
-                <div class="blog-text">
-                    <span>02 Feb /Operating System</span>
-                    <a href="https://www.crucial.in/articles/about-memory/what-is-the-difference-between-ram-and-rom#:~:text=RAM%20is%20volatile%20memory%20that,Find%20out%20more%20about%20RAM." class="blog-title">Difference between RAM and Rom</a>
-                    <p>RAM is volatile memory that temporarily stores the files you are working on. ROM is non-volatile... </p>
-                    <a href="https://www.crucial.in/articles/about-memory/what-is-the-difference-between-ram-and-rom#:~:text=RAM%20is%20volatile%20memory%20that,Find%20out%20more%20about%20RAM." >Read More</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="blog-container" data-aos="zoom-in-up">
-            <div class="blog-box">
-                <div class="blog-img">
-                    <img src="./images/CPU Scheduling_5.PNG" alt="Blog">
-                </div>
-
-                <div class="blog-text">
-                    <span>9 Feb /Operating System</span>
-                    <a href="https://www.tutorialspoint.com/semaphores-in-operating-system" class="blog-title">What is Semaphore?</a>
-                    <p>a semaphore is a variable or abstract data type used to control access to a common resource by...</p>
-                    <a href="https://www.tutorialspoint.com/semaphores-in-operating-system" >Read More</a>
-                </div>
-            </div>
-
-            <div class="blog-box">
-                <div class="blog-img">
-                    <img src="./images/CPU Scheduling_6.PNG" alt="Blog">
-                </div>
-
-                <div class="blog-text">
-                    <span>19 Jan /Operating System</span>
-                    <a href="https://www.geeksforgeeks.org/introduction-of-deadlock-in-operating-system/" class="blog-title">What is Deadlock?</a>
-                    <p>A deadlock is a condition that may happen in a system composed of multiple processes that can access...</p>
-                    <a href="https://www.geeksforgeeks.org/introduction-of-deadlock-in-operating-system/" >Read More</a>
-                </div>
-            </div>
-
-            <div class="blog-box">
-                <div class="blog-img">
-                    <img src="./images/CPU Scheduling_7.PNG" alt="Blog">
-                </div>
-
-                <div class="blog-text">
-                    <span>18 May /Operating System</span>
-                    <a href="https://www.techopedia.com/definition/1115/storage#:~:text=Storage%20is%20a%20process%20through,data%2C%20either%20temporarily%20or%20permanently." class="blog-title">What is Storage ?</a>
-                    <p>Storage is a process through which digital data is saved within a data storage device by means of...</p>
-                    <a href="https://www.techopedia.com/definition/1115/storage#:~:text=Storage%20is%20a%20process%20through,data%2C%20either%20temporarily%20or%20permanently." >Read More</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-    <section class="cta" data-aos="zoom-in-up">
-        <h1>Learn about all types Algorithm<br> Click Below!</h1>
-        <a href="./docs.html" class="hero-btn">Click Here</a>
-    </section>
-
-    <section class="footer">
-        <!-- <h4>About Us</h4>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta pariatur eveniet eaque provident error velit totam quos. Corrupti sunt omnis<br>  eligendi ut enim, sed magnamquo laboriosam, aspernatur nulla ipsum commodi itaque accusantium sapiente!</p> -->
-
-        <div class="icons">
-            <a href="https://www.facebook.com"><i  class="fab fa-facebook"></i></a>
-            <a href="https://www.instagram.com/invites/contact/?i=17s1o7wfms500&utm_content=i08g8yn"><i class="fab fa-instagram"></i></a>
-            <a href="https://twitter.com/Krutarth12345?t=JASTMDZLzUB4VOR-OEd_kg&s=09"><i class="fab fa-twitter"></i></a>
-            <a href="https://www.linkedin.com/in/krutarth-patel-653065205 "><i class="fab fa-linkedin"></i></a>
-        </div>
-            
-    </section>
-
-    <script>
-        var navLinks = document.getElementById("navLinks");
-        function showMenu() {
-            navLinks.style.right = "0";
-        }
-
-        function hideMenu() {
-            navLinks.style.right = "-200px";
-        }
-
-        function gotoDocs(){
-            location.href = ("docs.html");
-        }
-    </script>
-
-    <!-- animation for cards -->
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script>
-      AOS.init({
-        offset: 100, // offset (in px) from the original trigger point
-        duration: 800
-      }
-      );
-    </script>
 </body>
 
 </html>
