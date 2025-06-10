@@ -1,3 +1,54 @@
+/* === Enhanced Styles Added Before Original CSS === */
+
+/* Main Table Styling */
+.main-table {
+    width: 80%;
+    margin: 30px auto;
+    font-size: 16px;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden; /* Ensures rounded corners clip content */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #fdfdfd;
+    color: #333;
+}
+
+/* Table headers and cells */
+.main-table th,
+.main-table td {
+    padding: 12px 16px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+/* Table inputs */
+.main-table input {
+    width: 80px;
+    padding: 4px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+/* Dark Mode Styling */
+body.dark-mode .main-table {
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    box-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+
+body.dark-mode .main-table th,
+body.dark-mode .main-table td {
+    border: 1px solid #555;
+}
+
+body.dark-mode .main-table input {
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #777;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -171,279 +222,361 @@ body.dark-mode #dark-mode-toggle {
     color: #fff;
 }
 
-/* Tables */
-table {
-    width: 100%;
-    margin: 20px 0;
-    border-collapse: collapse;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-body.dark-mode table {
-    background: #2c3e50;
-    color: #e0e0e0;
-}
-
-th, td {
-    padding: 12px 8px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-body.dark-mode th,
-body.dark-mode td {
-    border: 1px solid #555;
-    color: #e0e0e0;
-}
-
-th {
-    background: #3498db;
-    color: #fff;
-    font-weight: 600;
-}
-
-body.dark-mode th {
-    background: #34495e;
-    color: #fff;
-}
-
-td {
-    background: #fff;
-}
-
-body.dark-mode td {
-    background: #34495e;
-}
-
-table input {
-    text-align: center;
-    border: 1px solid #ddd;
-    width: 100px;
-    padding: 6px;
-    border-radius: 4px;
-    font-size: 16px;
-    background: #fff;
-    color: #333;
-}
-
-body.dark-mode table input {
-    background: #2c3e50;
-    color: #e0e0e0;
-    border: 1px solid #555;
-}
-
-.hide {
-    display: none;
-}
-
 /* Process Queue Preview */
 #process-queue {
-    background: #e9f7fe;
-    border-radius: 8px;
-    padding: 15px;
-    margin: 15px 0;
-    min-height: 50px;
     display: flex;
+    gap: 8px;
     flex-wrap: wrap;
-    gap: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-body.dark-mode #process-queue {
-    background: #2c3e50;
+    margin: 10px 0 20px 0;
 }
 
 .process-tag {
     background: #3498db;
     color: white;
     padding: 5px 10px;
-    border-radius: 15px;
+    border-radius: 20px;
     font-weight: bold;
-    transition: transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
-.process-tag:hover {
-    transform: scale(1.05);
-}
-
-.process-tag.arrived { background: #27ae60; }
-.process-tag.running { background: #e67e22; }
-.process-tag.terminated { background: #e74c3c; }
-.process-tag.blocked { background: #9b59b6; }
 
 body.dark-mode .process-tag {
     background: #2980b9;
 }
 
-/* Output Area */
-#output {
-    margin-top: 25px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* === Original CSS Starts Here === */
+
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 17px;
 }
 
-body.dark-mode #output {
-    background: #2c3e50;
-    color: #e0e0e0;
+body {
+    margin: 10px 20px;
 }
 
-/* Charts and Visuals */
-#gantt-chart, #timeline-chart {
+.instructions {
+    font-size: 14px;
+    margin: 10px 20px;
+}
+
+h1 {
+    font-size: 26px;
+}
+
+table,
+th,
+td {
+    border-collapse: collapse;
+    text-align: center;
+    border: 2px solid black;
+}
+
+td {
+    padding: 0 2px;
+}
+
+table input {
+    text-align: center;
+    border: none;
+    width: 100px;
+}
+
+.process-btn {
+    height: 5px;
+}
+
+.process-btn button {
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+td.process-btn {
+    text-align: center;
+    vertical-align: middle;
+}
+.hide {
+    display: none;
+}
+
+button {
+    padding: 5px;
+}
+
+.schedule-table-process,
+.schedule-table-process td {
+    border: 1px solid black;
+}
+
+.schedule-table-process {
+    margin-left: 6px;
+}
+
+.schedule-table-time,
+.schedule-table-time td {
+    text-align: left;
+    border: 1px solid white;
+}
+
+#algorithm-chart-div {
+    width: 80%;
+    height: 50%;
+}
+
+#round-robin-chart-div {
+    height: 40%;
+    width: 80%;
+}
+
+#gantt-chart {
     height: 250px;
     overflow-x: auto;
-    margin: 20px 0;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-body.dark-mode #gantt-chart,
-body.dark-mode #timeline-chart {
-    background: #2c3e50;
-}
-
-#algorithm-chart-div, #round-robin-chart-div {
-    width: 80%;
+    overflow-y: hidden;
     margin: 20px auto;
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-body.dark-mode #algorithm-chart-div,
-body.dark-mode #round-robin-chart-div {
-    background: #2c3e50;
-}
-
-/* Time Log Visualization - NEW AND IMPROVED */
-#time-log-visualization {
-    position: relative;
-    width: 600px;
-    height: 250px;
-    margin: 40px auto;
-    background: #e9f7fe;
+    padding: 10px;
+    background-color: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    padding: 20px;
-    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #ccc;
+}
+
+/* Dark mode support */
+body.dark-mode #gantt-chart {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+}
+
+
+#timeline-chart {
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 250px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+}
+
+/* Dark mode support */
+body.dark-mode #timeline-chart {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+}
+
+/* Final Table Styles */
+.final-table {
+    width: 90%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.final-table th,
+.final-table td {
+    padding: 12px 16px;
+    border: 1px solid #ccc;
     text-align: center;
+    font-size: 16px;
 }
 
-body.dark-mode #time-log-visualization {
-    background: #2c3e50;
-    color: #e0e0e0;
-}
-
-.time-log-box {
-    position: absolute;
-    width: 120px;
-    height: 60px;
-    background: #3498db;
+.final-table th {
+    background-color: #3498db;
     color: white;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    font-size: 1.1rem;
+}
+
+.final-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.final-table tr:hover {
+    background-color: #e6f7ff;
+}
+
+/* Dark mode support */
+body.dark-mode .final-table {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #444;
+}
+
+body.dark-mode .final-table th {
+    background-color: #34495e;
+    color: #fff;
+}
+
+body.dark-mode .final-table tr:nth-child(even) {
+    background-color: #3a3a3a;
+}
+
+body.dark-mode .final-table tr:hover {
+    background-color: #444;
+}
+
+/* CPU Utilization & Throughput Text */
+.final-stats {
+    width: 90%;
+    margin: 20px auto;
+    font-size: 16px;
+    text-align: center;
+    color: #333;
+}
+
+body.dark-mode .final-stats {
+    color: #ddd;
+}
+
+
+
+#output {
+    margin-top: 20px;
+}
+
+#priority-toggle-btn {
+    font-size: 12px;
     font-weight: bold;
-    z-index: 1;
+    padding: 0 0;
+    width: 60px;
 }
 
-body.dark-mode .time-log-box {
-    background: #2980b9;
+.preferences {
+    list-style: none;
 }
 
-#remain-box {
-    left: 30px;
-    top: 40px;
+thead {
+    font-weight: bold;
 }
-#ready-box {
-    left: 180px;
-    top: 40px;
+
+#time-log-table-div {
+    margin-top: 10vh;
+    position: relative;
 }
-#running-box {
-    left: 330px;
-    top: 40px;
+
+.time-log-table {
+    width: 10%;
+    position: absolute;
 }
-#block-box {
-    left: 180px;
-    top: 140px;
+
+#remain-table {
+    left: 7.5%;
 }
-#terminate-box {
-    left: 330px;
-    top: 140px;
+
+#ready-table {
+    left: 32.5%;
+}
+
+#running-table {
+    right: 32.5%;
+}
+
+#block-table {
+    left: 45%;
+    top: 8vw;
+}
+
+#terminate-table {
+    right: 7.5%;
 }
 
 .arrow {
     position: absolute;
-    color: #4bb3fd;
-    font-size: 2.5rem;
-    z-index: 2;
+    font-size: 100px;
 }
 
-body.dark-mode .arrow {
-    color: #4bb3fd;
+#remain-ready {
+    left: 20.5%;
+    top: -62px;
 }
 
-#arrow-remain-ready {
-    left: 155px;
-    top: 60px;
-}
-#arrow-ready-running {
-    left: 305px;
-    top: 60px;
-}
-#arrow-running-terminate {
-    left: 455px;
-    top: 60px;
-}
-#arrow-running-block {
-    left: 305px;
-    top: 105px;
-    transform: rotate(90deg);
-}
-#arrow-block-ready {
-    left: 155px;
-    top: 130px;
+#ready-running {
     transform: rotate(180deg);
+    left: 47%;
+    top: -15px;
+    font-size: 80px;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    body {
-        margin: 10px;
-    }
-    #algorithm-chart-div, #round-robin-chart-div {
-        width: 95%;
-    }
-    #time-log-visualization {
-        width: 95%;
-        height: auto;
-        padding-bottom: 180px;
-    }
-    .time-log-box {
-        width: 80px;
-        height: 50px;
-        font-size: 0.9rem;
-    }
-    #remain-box { left: 5%; top: 20px; }
-    #ready-box { left: 35%; top: 20px; }
-    #running-box { left: 65%; top: 20px; }
-    #block-box { left: 35%; top: 100px; }
-    #terminate-box { left: 65%; top: 100px; }
-    .arrow {
-        font-size: 1.8rem;
-    }
-    #arrow-remain-ready { left: calc(35% - 40px); top: 45px; }
-    #arrow-ready-running { left: calc(65% - 40px); top: 45px; }
-    #arrow-running-terminate { left: calc(95% - 40px); top: 45px; }
-    #arrow-running-block { left: 50%; top: 75px; transform: rotate(90deg); }
-    #arrow-block-ready { left: calc(35% - 40px); top: 75px; transform: rotate(180deg); }
+#running-ready {
+    left: 47%;
+    top: -60px;
+    font-size: 80px;
 }
+
+#running-terminate {
+    right: 20.5%;
+    top: -62px;
+}
+
+#running-block {
+    transform: rotate(135deg);
+    left: 52%;
+    top: 20px;
+}
+
+#block-ready {
+    transform: rotate(225deg);
+    left: 40%;
+    top: 20px;
+}
+
+/* Container for the algorithm chart */
+#algorithm-chart-div {
+    margin: 40px auto;
+    padding: 20px;
+    width: 95%;
+    max-width: 1200px;
+    min-height: 500px;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.dark-mode #algorithm-chart-div {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.05);
+}
+
+#algorithm-chart {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 460px;
+}
+#round-robin-chart-div {
+    margin: 40px auto;
+    padding: 20px;
+    width: 95%;
+    max-width: 1200px;
+    min-height: 500px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.dark-mode #round-robin-chart-div {
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 14px rgba(255, 255, 255, 0.05);
+}
+
+#round-robin-chart {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 460px;
+}
+
+
