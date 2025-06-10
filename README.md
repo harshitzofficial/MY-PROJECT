@@ -100,22 +100,13 @@ scheduling-algorithms/
 ---
 
 ## 📸 Screenshots
-
-![image](https://github.com/user-attachments/assets/3a304f75-c02f-41d2-9a53-510b49bd3731)
-
-
-![image](https://github.com/user-attachments/assets/50424a55-2af6-4737-8123-08270a5477d6)
-
-![image](https://github.com/user-attachments/assets/b1428387-3c0c-489e-bfa1-162f3ff907a2)
-
-
-![image](https://github.com/user-attachments/assets/731bfbd3-6cbd-4f19-be33-207dd487e6f3)
-
-![image](https://github.com/user-attachments/assets/6b5a16ee-21c0-4e38-a7f1-bdafcb6e3d15)
-
-![image](https://github.com/user-attachments/assets/e6f5aba1-622c-48c4-b483-41432661ded3)
-![image](https://github.com/user-attachments/assets/3e76eeba-7793-408b-ae12-2e33fec9de7f)
-
+![image](https://github.com/user-attachments/assets/79b4cf16-f386-4f67-a1dd-ee86d3525bc1)
+![image](https://github.com/user-attachments/assets/a8f66ac4-26d8-46b6-972b-19eb8edb11d6)
+![image](https://github.com/user-attachments/assets/f55322a4-0567-49a2-af95-890be1fcd088)
+![image](https://github.com/user-attachments/assets/48b501e3-5833-4a65-ac78-3546160e3104)
+![image](https://github.com/user-attachments/assets/d520198d-07de-452d-97d9-946751c09992)
+![image](https://github.com/user-attachments/assets/cf694f84-096e-4fea-a2da-4345b443aacc)
+![image](https://github.com/user-attachments/assets/93747bef-b4bf-4035-a657-78342772763f)
 
 
 
