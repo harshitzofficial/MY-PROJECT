@@ -1,4 +1,7 @@
-let priorityPreference = 1; //priority preferences change
+let processCount = 1;
+
+// Priority toggle
+let priorityPreference = 1;
 document.getElementById("priority-toggle-btn").onclick = () => {
     let currentPriorityPreference = document.getElementById("priority-preference").innerText;
     if (currentPriorityPreference == "high") {
@@ -9,8 +12,16 @@ document.getElementById("priority-toggle-btn").onclick = () => {
     priorityPreference *= -1;
 };
 
+// Algorithm change
 let selectedAlgorithm = document.getElementById('algo');
-
+function checkPriorityCell() {
+    let priorityCells = document.querySelectorAll(".priority");
+    if (selectedAlgorithm.value == "pnp" || selectedAlgorithm.value == "pp") {
+        priorityCells.forEach(cell => cell.classList.remove("hide"));
+    } else {
+        priorityCells.forEach(cell => cell.classList.add("hide"));
+    }
+}
 function checkTimeQuantumInput() {
     let timequantum = document.querySelector("#time-quantum").classList;
     if (selectedAlgorithm.value == 'rr') {
@@ -19,197 +30,82 @@ function checkTimeQuantumInput() {
         timequantum.add("hide");
     }
 }
-
-function checkPriorityCell() {
-    let prioritycell = document.querySelectorAll(".priority");
-    if (selectedAlgorithm.value == "pnp" || selectedAlgorithm.value == "pp") {
-        prioritycell.forEach((element) => {
-            element.classList.remove("hide");
-        });
-    } else {
-        prioritycell.forEach((element) => {
-            element.classList.add("hide");
-        });
-    }
-}
-
 selectedAlgorithm.onchange = () => {
-    checkTimeQuantumInput();
     checkPriorityCell();
+    checkTimeQuantumInput();
 };
 
-function inputOnChange() { //onchange EventListener for input
+// Add process
+function addProcess() {
+    processCount++;
+    let table = document.querySelector(".main-table tbody");
+    let newRow = document.createElement("tr");
+    newRow.innerHTML = `
+        <td class="process-id">P${processCount}</td>
+        <td class="priority hide"><input type="number" min="1" step="1" value="1"></td>
+        <td class="arrival-time"><input type="number" min="0" step="1" value="0"></td>
+        <td class="process-time cpu"><input type="number" min="1" step="1" value="1"></td>
+    `;
+    table.appendChild(newRow);
+    checkPriorityCell();
+    updateProcessQueue();
+    inputOnChange();
+}
+document.querySelector(".add-btn").onclick = addProcess;
+
+// Delete process
+function deleteProcess() {
+    let table = document.querySelector(".main-table tbody");
+    if (processCount > 1) {
+        table.removeChild(table.lastElementChild);
+        processCount--;
+        updateProcessQueue();
+    }
+}
+document.querySelector(".remove-btn").onclick = deleteProcess;
+
+// Process queue preview
+function updateProcessQueue() {
+    let processTags = document.querySelectorAll('.process-id');
+    let queue = document.getElementById("process-queue");
+    queue.innerHTML = '';
+    processTags.forEach(tag => {
+        let span = document.createElement("span");
+        span.className = "process-tag";
+        span.textContent = tag.textContent;
+        queue.appendChild(span);
+    });
+}
+
+// Input validation
+function inputOnChange() {
     let inputs = document.querySelectorAll('input');
     inputs.forEach((input) => {
         if (input.type == 'number') {
             input.onchange = () => {
                 let inputVal = Number(input.value);
-                let isInt = Number.isInteger(inputVal);
-                if (input.parentNode.classList.contains('arrival-time') || input.id == 'context-switch') //min 0 : arrival time
-                {
-                    if (!isInt || (isInt && inputVal < 0)) {
-                        input.value = 0;
-                    } else {
-                        input.value = inputVal;
-                    }
-                } else //min 1 : time quantum, priority, process time
-                {
-                    if (!isInt || (isInt && inputVal < 1)) {
-                        input.value = 1;
-                    } else {
-                        input.value = inputVal;
-                    }
+                if (input.parentNode.classList.contains('arrival-time') || input.id == 'context-switch') {
+                    if (!Number.isInteger(inputVal) || inputVal < 0) input.value = 0;
+                } else {
+                    if (!Number.isInteger(inputVal) || inputVal < 1) input.value = 1;
                 }
-            }
+            };
         }
     });
 }
 inputOnChange();
-let process = 1;
-//resize burst time rows size on +/-
 
-function gcd(x, y) {
-    while (y) {
-        let t = y;
-        y = x % y;
-        x = t;
-    }
-    return x;
-}
-
-function lcm(x, y) {
-    return (x * y) / gcd(x, y);
-}
-
-function lcmAll() {
-    let result = 1;
-    for (let i = 0; i < process; i++) {
-        result = lcm(result, document.querySelector(".main-table").rows[2 * i + 2].cells.length);
-    }
-    return result;
-}
-
-function updateColspan() { //update burst time cell colspan
-    let totalColumns = lcmAll();
-    let processHeading = document.querySelector("thead .process-time");
-    processHeading.setAttribute("colspan", totalColumns);
-    let processTimes = [];
-    let table = document.querySelector(".main-table");
-    for (let i = 0; i < process; i++) {
-        let row = table.rows[2 * i + 2].cells;
-        processTimes.push(row.length);
-    }
-    for (let i = 0; i < process; i++) {
-        let row1 = table.rows[2 * i + 1].cells;
-        let row2 = table.rows[2 * i + 2].cells;
-        for (let j = 0; j < processTimes[i]; j++) {
-            row1[j + 3].setAttribute("colspan", totalColumns / processTimes[i]);
-            row2[j].setAttribute("colspan", totalColumns / processTimes[i]);
-        }
-    }
-}
-
-function addremove() { //add remove bt-io time pair add event listener
-    let processTimes = [];
-    let table = document.querySelector(".main-table");
-    for (let i = 0; i < process; i++) {
-        let row = table.rows[2 * i + 2].cells;
-        processTimes.push(row.length);
-    }
-    let addbtns = document.querySelectorAll(".add-process-btn");
-    for (let i = 0; i < process; i++) {
-        addbtns[i].onclick = () => {
-            let table = document.querySelector(".main-table");
-            let row1 = table.rows[2 * i + 1];
-            let row2 = table.rows[2 * i + 2];
-            let newcell1 = row1.insertCell(processTimes[i] + 3);
-            newcell1.innerHTML = "IO";
-            newcell1.classList.add("process-time");
-            newcell1.classList.add("io");
-            newcell1.classList.add("process-heading");
-            let newcell2 = row2.insertCell(processTimes[i]);
-            newcell2.innerHTML = '<input type="number" min="1" step="1" value="1">';
-            newcell2.classList.add("process-time");
-            newcell2.classList.add("io");
-            newcell2.classList.add("process-input");
-            let newcell3 = row1.insertCell(processTimes[i] + 4);
-            newcell3.innerHTML = "CPU";
-            newcell3.classList.add("process-time");
-            newcell3.classList.add("cpu");
-            newcell3.classList.add("process-heading");
-            let newcell4 = row2.insertCell(processTimes[i] + 1);
-            newcell4.innerHTML = '<input type="number" min="1" step="1" value="1">';
-            newcell4.classList.add("process-time");
-            newcell4.classList.add("cpu");
-            newcell4.classList.add("process-input");
-            processTimes[i] += 2;
-            updateColspan();
-            inputOnChange();
-        };
-    }
-    let removebtns = document.querySelectorAll(".remove-process-btn");
-    for (let i = 0; i < process; i++) {
-        removebtns[i].onclick = () => {
-            if (processTimes[i] > 1) {
-                let table = document.querySelector(".main-table");
-                processTimes[i]--;
-                let row1 = table.rows[2 * i + 1];
-                row1.deleteCell(processTimes[i] + 3);
-                let row2 = table.rows[2 * i + 2];
-                row2.deleteCell(processTimes[i]);
-                processTimes[i]--;
-                table = document.querySelector(".main-table");
-                row1 = table.rows[2 * i + 1];
-                row1.deleteCell(processTimes[i] + 3);
-                row2 = table.rows[2 * i + 2];
-                row2.deleteCell(processTimes[i]);
-                updateColspan();
-            }
-        };
-    }
-}
-addremove();
-
-function addProcess() {
-    process++;
-    let rowHTML1 = `
-                          <td class="process-id" rowspan="2">P${process}</td>
-                          <td class="priority hide" rowspan="2"><input type="number" min="1" step="1" value="1"></td>
-                          <td class="arrival-time" rowspan="2"><input type="number" min="0" step="1" value="0"> </td>
-                          <td class="process-time cpu process-heading" colspan="">CPU</td>
-                          <td class="process-btn"><button type="button" class="add-process-btn">+</button></td>
-                          <td class="process-btn"><button type="button" class="remove-process-btn">-</button></td>
-                      `;
-    let rowHTML2 = `
-                           <td class="process-time cpu process-input"><input type="number" min="1" step="1" value="1"> </td>
-                      `;
-    let table = document.querySelector(".main-table tbody");
-    table.insertRow(table.rows.length).innerHTML = rowHTML1;
-    table.insertRow(table.rows.length).innerHTML = rowHTML2;
-    checkPriorityCell();
-    addremove();
-    updateColspan();
-    inputOnChange();
-}
-
-function deleteProcess() {
-    let table = document.querySelector(".main-table");
-    if (process > 1) {
-        table.deleteRow(table.rows.length - 1);
-        table.deleteRow(table.rows.length - 1);
-        process--;
-    }
-    updateColspan();
-    inputOnChange();
-}
-
-document.querySelector(".add-btn").onclick = () => { //add row event listener
-    addProcess();
+// Dark mode toggle
+document.getElementById('dark-mode-toggle').onclick = function() {
+    document.body.classList.toggle('dark-mode');
 };
-document.querySelector(".remove-btn").onclick = () => { //remove row event listener
-    deleteProcess();
-};
-//------------------------
+
+// Initialize
+checkPriorityCell();
+updateProcessQueue();
+
+// ========== Scheduling Logic (Simplified for 1 CPU per process) ==========
+
 class Input {
     constructor() {
         this.processId = [];
@@ -224,6 +120,7 @@ class Input {
         this.contextSwitch = 0;
     }
 }
+
 class Utility {
     constructor() {
         this.remainingProcessTime = [];
@@ -236,6 +133,7 @@ class Utility {
         this.currentTime = 0;
     }
 }
+
 class Output {
     constructor() {
         this.completionTime = [];
@@ -245,9 +143,10 @@ class Output {
         this.schedule = [];
         this.timeLog = [];
         this.contextSwitches = 0;
-        this.averageTimes = []; //ct,tat,wt,rt
+        this.averageTimes = []; // ct,tat,wt,rt
     }
 }
+
 class TimeLog {
     constructor() {
         this.time = -1;
@@ -282,29 +181,16 @@ function setAlgorithmNameType(input, algorithm) {
 }
 
 function setInput(input) {
-    for (let i = 1; i <= process; i++) {
-        input.processId.push(i - 1);
-        let rowCells1 = document.querySelector(".main-table").rows[2 * i - 1].cells;
-        let rowCells2 = document.querySelector(".main-table").rows[2 * i].cells;
-        input.priority.push(Number(rowCells1[1].firstElementChild.value));
-        input.arrivalTime.push(Number(rowCells1[2].firstElementChild.value));
-        let ptn = Number(rowCells2.length);
-        let pta = [];
-        for (let j = 0; j < ptn; j++) {
-            pta.push(Number(rowCells2[j].firstElementChild.value));
-        }
-        input.processTime.push(pta);
-        input.processTimeLength.push(ptn);
+    let rows = document.querySelectorAll(".main-table tbody tr");
+    for (let i = 0; i < processCount; i++) {
+        let cells = rows[i].cells;
+        input.processId.push(i);
+        input.priority.push(Number(cells[1].firstElementChild.value));
+        input.arrivalTime.push(Number(cells[2].firstElementChild.value));
+        input.processTime.push([Number(cells[3].firstElementChild.value)]);
+        input.processTimeLength.push(1);
+        input.totalBurstTime.push(Number(cells[3].firstElementChild.value));
     }
-    //total burst time for each process
-    input.totalBurstTime = new Array(process).fill(0);
-    input.processTime.forEach((e1, i) => {
-        e1.forEach((e2, j) => {
-            if (j % 2 == 0) {
-                input.totalBurstTime[i] += e2;
-            }
-        });
-    });
     setAlgorithmNameType(input, selectedAlgorithm.value);
     input.contextSwitch = Number(document.querySelector("#context-switch").value);
     input.timeQuantum = Number(document.querySelector("#tq").value);
@@ -313,10 +199,10 @@ function setInput(input) {
 function setUtility(input, utility) {
     utility.remainingProcessTime = input.processTime.slice();
     utility.remainingBurstTime = input.totalBurstTime.slice();
-    utility.remainingTimeRunning = new Array(process).fill(0);
-    utility.currentProcessIndex = new Array(process).fill(0);
-    utility.start = new Array(process).fill(false);
-    utility.done = new Array(process).fill(false);
+    utility.remainingTimeRunning = new Array(processCount).fill(0);
+    utility.currentProcessIndex = new Array(processCount).fill(0);
+    utility.start = new Array(processCount).fill(false);
+    utility.done = new Array(processCount).fill(false);
     utility.returnTime = input.arrivalTime.slice();
 }
 
@@ -339,8 +225,7 @@ function reduceSchedule(schedule) {
 
 function reduceTimeLog(timeLog) {
     let timeLogLength = timeLog.length;
-    let newTimeLog = [],
-        j = 0;
+    let newTimeLog = [], j = 0;
     for (let i = 0; i < timeLogLength - 1; i++) {
         if (timeLog[i] != timeLog[i + 1]) {
             newTimeLog.push(timeLog[j]);
@@ -358,28 +243,27 @@ function outputAverageTimes(output) {
     output.completionTime.forEach((element) => {
         avgct += element;
     });
-    avgct /= process;
+    avgct /= processCount;
     let avgtat = 0;
     output.turnAroundTime.forEach((element) => {
         avgtat += element;
     });
-    avgtat /= process;
+    avgtat /= processCount;
     let avgwt = 0;
     output.waitingTime.forEach((element) => {
         avgwt += element;
     });
-    avgwt /= process;
+    avgwt /= processCount;
     let avgrt = 0;
     output.responseTime.forEach((element) => {
         avgrt += element;
     });
-    avgrt /= process;
+    avgrt /= processCount;
     return [avgct, avgtat, avgwt, avgrt];
 }
 
 function setOutput(input, output) {
-    //set turn around time and waiting time
-    for (let i = 0; i < process; i++) {
+    for (let i = 0; i < processCount; i++) {
         output.turnAroundTime[i] = output.completionTime[i] - input.arrivalTime[i];
         output.waitingTime[i] = output.turnAroundTime[i] - input.totalBurstTime[i];
     }
@@ -399,46 +283,23 @@ function showGanttChart(output, outputDiv) {
     let ganttChartData = [];
     let startGantt = 0;
     output.schedule.forEach((element) => {
-        if (element[0] == -2) { //context switch
-            ganttChartData.push([
-                "Time",
-                "CS",
-                "grey",
-                getDate(startGantt),
-                getDate(startGantt + element[1])
-            ]);
-
-        } else if (element[0] == -1) { //nothing
-            ganttChartData.push([
-                "Time",
-                "Empty",
-                "black",
-                getDate(startGantt),
-                getDate(startGantt + element[1])
-            ]);
-
-        } else { //process 
-            ganttChartData.push([
-                "Time",
-                "P" + element[0],
-                "",
-                getDate(startGantt),
-                getDate(startGantt + element[1])
-            ]);
+        if (element[0] == -2) {
+            ganttChartData.push(["Time", "CS", "grey", getDate(startGantt), getDate(startGantt + element[1])]);
+        } else if (element[0] == -1) {
+            ganttChartData.push(["Time", "Empty", "black", getDate(startGantt), getDate(startGantt + element[1])]);
+        } else {
+            ganttChartData.push(["Time", "P" + element[0], "", getDate(startGantt), getDate(startGantt + element[1])]);
         }
         startGantt += element[1];
     });
     let ganttChart = document.createElement("div");
     ganttChart.id = "gantt-chart";
-
     google.charts.load("current", { packages: ["timeline"] });
     google.charts.setOnLoadCallback(drawGanttChart);
-
     function drawGanttChart() {
         var container = document.getElementById("gantt-chart");
         var chart = new google.visualization.Timeline(container);
         var dataTable = new google.visualization.DataTable();
-
         dataTable.addColumn({ type: "string", id: "Gantt Chart" });
         dataTable.addColumn({ type: "string", id: "Process" });
         dataTable.addColumn({ type: 'string', id: 'style', role: 'style' });
@@ -451,10 +312,7 @@ function showGanttChart(output, outputDiv) {
         }
         var options = {
             width: ganttWidth,
-            timeline: {
-                showRowLabels: false,
-                avoidOverlappingGridLines: false
-            }
+            timeline: { showRowLabels: false, avoidOverlappingGridLines: false }
         };
         chart.draw(dataTable, options);
     }
@@ -468,39 +326,29 @@ function showTimelineChart(output, outputDiv) {
     let timelineChartData = [];
     let startTimeline = 0;
     output.schedule.forEach((element) => {
-        if (element[0] >= 0) { //process 
-            timelineChartData.push([
-                "P" + element[0],
-                getDate(startTimeline),
-                getDate(startTimeline + element[1])
-            ]);
+        if (element[0] >= 0) {
+            timelineChartData.push(["P" + element[0], getDate(startTimeline), getDate(startTimeline + element[1])]);
         }
         startTimeline += element[1];
     });
     timelineChartData.sort((a, b) => parseInt(a[0].substring(1, a[0].length)) - parseInt(b[0].substring(1, b[0].length)));
     let timelineChart = document.createElement("div");
     timelineChart.id = "timeline-chart";
-
     google.charts.load("current", { packages: ["timeline"] });
     google.charts.setOnLoadCallback(drawTimelineChart);
-
     function drawTimelineChart() {
         var container = document.getElementById("timeline-chart");
         var chart = new google.visualization.Timeline(container);
         var dataTable = new google.visualization.DataTable();
-
         dataTable.addColumn({ type: "string", id: "Process" });
         dataTable.addColumn({ type: "date", id: "Start" });
         dataTable.addColumn({ type: "date", id: "End" });
         dataTable.addRows(timelineChartData);
-
         let timelineWidth = '100%';
         if (startTimeline >= 20) {
             timelineWidth = 0.05 * startTimeline * screen.availWidth;
         }
-        var options = {
-            width: timelineWidth,
-        };
+        var options = { width: timelineWidth };
         chart.draw(dataTable, options);
     }
     outputDiv.appendChild(timelineChart);
@@ -528,7 +376,7 @@ function showFinalTable(input, output, outputDiv) {
         cell.innerHTML = element;
     });
     let tbody = table.createTBody();
-    for (let i = 0; i < process; i++) {
+    for (let i = 0; i < processCount; i++) {
         let row = tbody.insertRow(i);
         let cell = row.insertCell(0);
         cell.innerHTML = "P" + (i + 1);
@@ -546,21 +394,17 @@ function showFinalTable(input, output, outputDiv) {
         cell.innerHTML = output.responseTime[i];
     }
     outputDiv.appendChild(table);
-
     let tbt = 0;
     input.totalBurstTime.forEach((element) => (tbt += element));
     let lastct = 0;
     output.completionTime.forEach((element) => (lastct = Math.max(lastct, element)));
-
     let cpu = document.createElement("p");
     cpu.innerHTML = "CPU Utilization : " + (tbt / lastct) * 100 + "%";
     outputDiv.appendChild(cpu);
-
     let tp = document.createElement("p");
-    tp.innerHTML = "Throughput : " + process / lastct;
+    tp.innerHTML = "Throughput : " + processCount / lastct;
     outputDiv.appendChild(tp);
     if (input.contextSwitch > 0) {
-
         let cs = document.createElement("p");
         cs.innerHTML = "Number of Context Switches : " + (output.contextSwitches - 1);
         outputDiv.appendChild(cs);
@@ -576,99 +420,44 @@ function toggleTimeLogArrowColor(timeLog, color) {
 
 function nextTimeLog(timeLog) {
     let timeLogTableDiv = document.getElementById("time-log-table-div");
-
     let arrowHTML = `
-    <p id = "remain-ready" class = "arrow">&rarr;</p>
-    <p id = "ready-running" class = "arrow">&#10554;</p>
-    <p id = "running-ready" class = "arrow">&#10554;</p>
-    <p id = "running-terminate" class = "arrow">&rarr;</p>
-    <p id = "running-block" class = "arrow">&rarr;</p>
-    <p id = "block-ready" class = "arrow">&rarr;</p>
+        <p id="remain-ready" class="arrow">&rarr;</p>
+        <p id="ready-running" class="arrow">&#10554;</p>
+        <p id="running-ready" class="arrow">&#10554;</p>
+        <p id="running-terminate" class="arrow">&rarr;</p>
+        <p id="running-block" class="arrow">&rarr;</p>
+        <p id="block-ready" class="arrow">&rarr;</p>
     `;
     timeLogTableDiv.innerHTML = arrowHTML;
 
-    let remainTable = document.createElement("table");
-    remainTable.id = "remain-table";
-    remainTable.className = 'time-log-table';
-    let remainTableHead = remainTable.createTHead();
-    let remainTableHeadRow = remainTableHead.insertRow(0);
-    let remainTableHeading = remainTableHeadRow.insertCell(0);
-    remainTableHeading.innerHTML = "Remain";
-    let remainTableBody = remainTable.createTBody();
-    for (let i = 0; i < timeLog.remain.length; i++) {
-        let remainTableBodyRow = remainTableBody.insertRow(i);
-        let remainTableValue = remainTableBodyRow.insertCell(0);
-        remainTableValue.innerHTML = 'P' + (timeLog.remain[i] + 1);
+    function addTable(containerId, heading, processes, className) {
+        let table = document.createElement("table");
+        table.id = containerId;
+        table.className = 'time-log-table';
+        let thead = table.createTHead();
+        let headRow = thead.insertRow(0);
+        let headCell = headRow.insertCell(0);
+        headCell.innerHTML = heading;
+        let tbody = table.createTBody();
+        processes.forEach((proc, i) => {
+            let row = tbody.insertRow(i);
+            let cell = row.insertCell(0);
+            cell.innerHTML = 'P' + (proc + 1);
+        });
+        timeLogTableDiv.appendChild(table);
     }
-    timeLogTableDiv.appendChild(remainTable);
-
-    let readyTable = document.createElement("table");
-    readyTable.id = "ready-table";
-    readyTable.className = 'time-log-table';
-    let readyTableHead = readyTable.createTHead();
-    let readyTableHeadRow = readyTableHead.insertRow(0);
-    let readyTableHeading = readyTableHeadRow.insertCell(0);
-    readyTableHeading.innerHTML = "Ready";
-    let readyTableBody = readyTable.createTBody();
-    for (let i = 0; i < timeLog.ready.length; i++) {
-        let readyTableBodyRow = readyTableBody.insertRow(i);
-        let readyTableValue = readyTableBodyRow.insertCell(0);
-        readyTableValue.innerHTML = 'P' + (timeLog.ready[i] + 1);
-    }
-    timeLogTableDiv.appendChild(readyTable);
-
-    let runningTable = document.createElement("table");
-    runningTable.id = "running-table";
-    runningTable.className = 'time-log-table';
-    let runningTableHead = runningTable.createTHead();
-    let runningTableHeadRow = runningTableHead.insertRow(0);
-    let runningTableHeading = runningTableHeadRow.insertCell(0);
-    runningTableHeading.innerHTML = "Running";
-    let runningTableBody = runningTable.createTBody();
-    for (let i = 0; i < timeLog.running.length; i++) {
-        let runningTableBodyRow = runningTableBody.insertRow(i);
-        let runningTableValue = runningTableBodyRow.insertCell(0);
-        runningTableValue.innerHTML = 'P' + (timeLog.running[i] + 1);
-    }
-    timeLogTableDiv.appendChild(runningTable);
-
-    let blockTable = document.createElement("table");
-    blockTable.id = "block-table";
-    blockTable.className = 'time-log-table';
-    let blockTableHead = blockTable.createTHead();
-    let blockTableHeadRow = blockTableHead.insertRow(0);
-    let blockTableHeading = blockTableHeadRow.insertCell(0);
-    blockTableHeading.innerHTML = "Block";
-    let blockTableBody = blockTable.createTBody();
-    for (let i = 0; i < timeLog.block.length; i++) {
-        let blockTableBodyRow = blockTableBody.insertRow(i);
-        let blockTableValue = blockTableBodyRow.insertCell(0);
-        blockTableValue.innerHTML = 'P' + (timeLog.block[i] + 1);
-    }
-    timeLogTableDiv.appendChild(blockTable);
-
-    let terminateTable = document.createElement("table");
-    terminateTable.id = "terminate-table";
-    terminateTable.className = 'time-log-table';
-    let terminateTableHead = terminateTable.createTHead();
-    let terminateTableHeadRow = terminateTableHead.insertRow(0);
-    let terminateTableHeading = terminateTableHeadRow.insertCell(0);
-    terminateTableHeading.innerHTML = "Terminate";
-    let terminateTableBody = terminateTable.createTBody();
-    for (let i = 0; i < timeLog.terminate.length; i++) {
-        let terminateTableBodyRow = terminateTableBody.insertRow(i);
-        let terminateTableValue = terminateTableBodyRow.insertCell(0);
-        terminateTableValue.innerHTML = 'P' + (timeLog.terminate[i] + 1);
-    }
-    timeLogTableDiv.appendChild(terminateTable);
+    addTable("remain-table", "Remain", timeLog.remain, "time-log-table");
+    addTable("ready-table", "Ready", timeLog.ready, "time-log-table");
+    addTable("running-table", "Running", timeLog.running, "time-log-table");
+    addTable("block-table", "Block", timeLog.block, "time-log-table");
+    addTable("terminate-table", "Terminate", timeLog.terminate, "time-log-table");
     document.getElementById("time-log-time").innerHTML = "Time : " + timeLog.time;
 }
 
 function showTimeLog(output, outputDiv) {
-    reduceTimeLog(output.timeLog);
     let timeLogDiv = document.createElement("div");
     timeLogDiv.id = "time-log-div";
-    timeLogDiv.style.height = (15 * process) + 300 + "px";
+    timeLogDiv.style.height = (15 * processCount) + 300 + "px";
     let startTimeLogButton = document.createElement("button");
     startTimeLogButton.id = "start-time-log";
     startTimeLogButton.innerHTML = "Start Time Log";
@@ -676,62 +465,40 @@ function showTimeLog(output, outputDiv) {
     outputDiv.appendChild(timeLogDiv);
 
     document.querySelector("#start-time-log").onclick = () => {
-        timeLogStart = 1;
-        let timeLogDiv = document.getElementById("time-log-div");
         let timeLogOutputDiv = document.createElement("div");
         timeLogOutputDiv.id = "time-log-output-div";
-
         let timeLogTableDiv = document.createElement("div");
-        timeLogTableDiv.id = "time-log-table-div";
-
+        timeLogTableDiv.id = "time-log-visualization";
+        timeLogTableDiv.innerHTML = `
+            <div id="remain-box" class="time-log-box">Remain</div>
+            <div id="ready-box" class="time-log-box">Ready</div>
+            <div id="running-box" class="time-log-box">Running</div>
+            <div id="block-box" class="time-log-box">Block</div>
+            <div id="terminate-box" class="time-log-box">Terminate</div>
+            <span id="arrow-remain-ready" class="arrow">→</span>
+            <span id="arrow-ready-running" class="arrow">→</span>
+            <span id="arrow-running-terminate" class="arrow">→</span>
+            <span id="arrow-running-block" class="arrow">→</span>
+            <span id="arrow-block-ready" class="arrow">→</span>
+        `;
         let timeLogTime = document.createElement("p");
         timeLogTime.id = "time-log-time";
-
+        timeLogTime.style.textAlign = "center";
+        timeLogTime.style.marginTop = "20px";
         timeLogOutputDiv.appendChild(timeLogTableDiv);
         timeLogOutputDiv.appendChild(timeLogTime);
         timeLogDiv.appendChild(timeLogOutputDiv);
-        let index = 0;
-        let timeLogInterval = setInterval(() => {
-            nextTimeLog(output.timeLog[index]);
-            if (index != output.timeLog.length - 1) {
-                setTimeout(() => {
-                    toggleTimeLogArrowColor(output.timeLog[index], 'red');
-                    setTimeout(() => {
-                        toggleTimeLogArrowColor(output.timeLog[index], 'black');
-                    }, 600);
-                }, 200);
-            }
-            index++;
-            if (index == output.timeLog.length) {
-                clearInterval(timeLogInterval);
-            }
-            document.getElementById("calculate").onclick = () => {
-                clearInterval(timeLogInterval);
-                document.getElementById("time-log-output-div").innerHTML = "";
-                calculateOutput();
-            }
-        }, 1000);
+
+        // Your logic to update process names and arrows here
     };
 }
+
 
 function showRoundRobinChart(outputDiv) {
     let roundRobinInput = new Input();
     setInput(roundRobinInput);
-    let maxTimeQuantum = 0;
-    roundRobinInput.processTime.forEach(processTimeArray => {
-        processTimeArray.forEach((time, index) => {
-            if (index % 2 == 0) {
-                maxTimeQuantum = Math.max(maxTimeQuantum, time);
-            }
-        });
-    });
-    let roundRobinChartData = [
-        [],
-        [],
-        [],
-        [],
-        []
-    ];
+    let maxTimeQuantum = Math.max(...roundRobinInput.totalBurstTime);
+    let roundRobinChartData = [[], [], [], [], []];
     let timeQuantumArray = [];
     for (let timeQuantum = 1; timeQuantum <= maxTimeQuantum; timeQuantum++) {
         timeQuantumArray.push(timeQuantum);
@@ -755,76 +522,30 @@ function showRoundRobinChart(outputDiv) {
     roundRobinChartDiv.id = "round-robin-chart-div";
     roundRobinChartDiv.appendChild(roundRobinChartCanvas);
     outputDiv.appendChild(roundRobinChartDiv);
-
     new Chart(document.getElementById('round-robin-chart'), {
         type: 'line',
         data: {
             labels: timeQuantumArray,
-            datasets: [{
-                    label: "Completion Time",
-                    borderColor: '#3366CC',
-                    data: roundRobinChartData[0]
-                },
-                {
-                    label: "Turn Around Time",
-                    borderColor: '#DC3912',
-                    data: roundRobinChartData[1]
-                },
-                {
-                    label: "Waiting Time",
-                    borderColor: '#FF9900',
-                    data: roundRobinChartData[2]
-                },
-                {
-                    label: "Response Time",
-                    borderColor: '#109618',
-                    data: roundRobinChartData[3]
-                },
-                {
-                    label: "Context Switches",
-                    borderColor: '#990099',
-                    data: roundRobinChartData[4]
-                },
+            datasets: [
+                { label: "Completion Time", borderColor: '#3366CC', data: roundRobinChartData[0] },
+                { label: "Turn Around Time", borderColor: '#DC3912', data: roundRobinChartData[1] },
+                { label: "Waiting Time", borderColor: '#FF9900', data: roundRobinChartData[2] },
+                { label: "Response Time", borderColor: '#109618', data: roundRobinChartData[3] },
+                { label: "Context Switches", borderColor: '#990099', data: roundRobinChartData[4] },
             ]
         },
         options: {
-            title: {
-                display: true,
-                text: ['Round Robin', 'Comparison of Completion, Turn Around, Waiting, Response Time and Context Switches', 'The Lower The Better']
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }],
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Time Quantum'
-                    }
-                }]
-            },
-            legend: {
-                display: true,
-                labels: {
-                    fontColor: 'black'
-                }
-            }
+            title: { display: true, text: ['Round Robin', 'Comparison of Completion, Turn Around, Waiting, Response Time and Context Switches', 'The Lower The Better'] },
+            scales: { yAxes: [{ ticks: { beginAtZero: true } }], xAxes: [{ scaleLabel: { display: true, labelString: 'Time Quantum' } }] },
+            legend: { display: true, labels: { fontColor: 'black' } }
         }
     });
 }
 
-
 function showAlgorithmChart(outputDiv) {
     let algorithmArray = ["fcfs", "sjf", "srtf", "ljf", "lrtf", "rr", "hrrn", "pnp", "pp"];
     let algorithmNameArray = ["FCFS", "SJF", "SRTF", "LJF", "LRTF", "RR", "HRRN", "PNP", "PP"];
-    let algorithmChartData = [
-        [],
-        [],
-        [],
-        []
-    ];
+    let algorithmChartData = [[], [], [], []];
     algorithmArray.forEach(currentAlgorithm => {
         let chartInput = new Input();
         let chartUtility = new Utility();
@@ -850,52 +571,17 @@ function showAlgorithmChart(outputDiv) {
         type: 'bar',
         data: {
             labels: algorithmNameArray,
-            datasets: [{
-                    label: "Completion Time",
-                    backgroundColor: '#3366CC',
-                    data: algorithmChartData[0]
-                },
-                {
-                    label: "Turn Around Time",
-                    backgroundColor: '#DC3912',
-                    data: algorithmChartData[1]
-                },
-                {
-                    label: "Waiting Time",
-                    backgroundColor: '#FF9900',
-                    data: algorithmChartData[2]
-                },
-                {
-                    label: "Response Time",
-                    backgroundColor: '#109618',
-                    data: algorithmChartData[3]
-                }
+            datasets: [
+                { label: "Completion Time", backgroundColor: '#3366CC', data: algorithmChartData[0] },
+                { label: "Turn Around Time", backgroundColor: '#DC3912', data: algorithmChartData[1] },
+                { label: "Waiting Time", backgroundColor: '#FF9900', data: algorithmChartData[2] },
+                { label: "Response Time", backgroundColor: '#109618', data: algorithmChartData[3] }
             ]
         },
         options: {
-            title: {
-                display: true,
-                text: ['Algorithm', 'Comparison of Completion, Turn Around, Waiting and Response Time', 'The Lower The Better']
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }],
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Algorithms'
-                    }
-                }]
-            },
-            legend: {
-                display: true,
-                labels: {
-                    fontColor: 'black'
-                }
-            }
+            title: { display: true, text: ['Algorithm', 'Comparison of Completion, Turn Around, Waiting and Response Time', 'The Lower The Better'] },
+            scales: { yAxes: [{ ticks: { beginAtZero: true } }], xAxes: [{ scaleLabel: { display: true, labelString: 'Algorithms' } }] },
+            legend: { display: true, labels: { fontColor: 'black' } }
         }
     });
 }
@@ -916,13 +602,23 @@ function showOutput(input, output, outputDiv) {
     showAlgorithmChart(outputDiv);
 }
 
+function moveElement(value, from, to) {
+    let index = from.indexOf(value);
+    if (index != -1) {
+        from.splice(index, 1);
+    }
+    if (to.indexOf(value) == -1) {
+        to.push(value);
+    }
+}
+
 function CPUScheduler(input, utility, output) {
     function updateReadyQueue(currentTimeLog) {
-        let candidatesRemain = currentTimeLog.remain.filter((element) => input.arrivalTime[element] <= currentTimeLog.time);
+        let candidatesRemain = currentTimeLog.remain.filter(element => input.arrivalTime[element] <= currentTimeLog.time);
         if (candidatesRemain.length > 0) {
             currentTimeLog.move.push(0);
         }
-        let candidatesBlock = currentTimeLog.block.filter((element) => utility.returnTime[element] <= currentTimeLog.time);
+        let candidatesBlock = currentTimeLog.block.filter(element => utility.returnTime[element] <= currentTimeLog.time);
         if (candidatesBlock.length > 0) {
             currentTimeLog.move.push(5);
         }
@@ -936,22 +632,14 @@ function CPUScheduler(input, utility, output) {
         currentTimeLog.move = [];
     }
 
-    function moveElement(value, from, to) { //if present in from and not in to
-        let index = from.indexOf(value);
-        if (index != -1) {
-            from.splice(index, 1);
-        }
-        if (to.indexOf(value) == -1) {
-            to.push(value);
-        }
-    }
     let currentTimeLog = new TimeLog();
     currentTimeLog.remain = input.processId;
     output.timeLog.push(JSON.parse(JSON.stringify(currentTimeLog)));
     currentTimeLog.move = [];
     currentTimeLog.time++;
     let lastFound = -1;
-    while (utility.done.some((element) => element == false)) {
+
+    while (utility.done.some(element => !element)) {
         updateReadyQueue(currentTimeLog);
         let found = -1;
         if (currentTimeLog.running.length == 1) {
@@ -986,7 +674,7 @@ function CPUScheduler(input, utility, output) {
                     }
                 });
                 found = candidates[0];
-                if (input.algorithmType == "preemptive" && found >= 0 && lastFound >= 0 && found != lastFound) { //context switch
+                if (input.algorithmType == "preemptive" && found >= 0 && lastFound >= 0 && found != lastFound) {
                     output.schedule.push([-2, input.contextSwitch]);
                     for (let i = 0; i < input.contextSwitch; i++, currentTimeLog.time++) {
                         updateReadyQueue(currentTimeLog);
@@ -1010,7 +698,6 @@ function CPUScheduler(input, utility, output) {
             output.schedule.push([found + 1, 1]);
             utility.remainingProcessTime[found][utility.currentProcessIndex[found]]--;
             utility.remainingBurstTime[found]--;
-
             if (input.algorithm == 'rr') {
                 utility.remainingTimeRunning[found]--;
                 if (utility.remainingTimeRunning[found] == 0) {
@@ -1045,7 +732,7 @@ function CPUScheduler(input, utility, output) {
                         output.contextSwitches++;
                     }
                 }
-            } else { //preemptive and non-preemptive
+            } else {
                 if (utility.remainingProcessTime[found][utility.currentProcessIndex[found]] == 0) {
                     utility.currentProcessIndex[found]++;
                     if (utility.currentProcessIndex[found] == input.processTimeLength[found]) {
@@ -1061,7 +748,7 @@ function CPUScheduler(input, utility, output) {
                     }
                     output.timeLog.push(JSON.parse(JSON.stringify(currentTimeLog)));
                     currentTimeLog.move = [];
-                    if (currentTimeLog.running.length == 0) { //context switch
+                    if (currentTimeLog.running.length == 0) {
                         output.schedule.push([-2, input.contextSwitch]);
                         for (let i = 0; i < input.contextSwitch; i++, currentTimeLog.time++) {
                             updateReadyQueue(currentTimeLog);
@@ -1101,6 +788,4 @@ function calculateOutput() {
     showOutput(mainInput, mainOutput, outputDiv);
 }
 
-document.getElementById("calculate").onclick = () => {
-    calculateOutput();
-};
+document.getElementById("calculate").onclick = calculateOutput;
