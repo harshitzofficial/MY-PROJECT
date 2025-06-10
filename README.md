@@ -1,192 +1,137 @@
+## 💻 CPU Scheduling Simulator
 ---
 
-# 💻 CPU Scheduling Simulator
+## 🧠 Project Description
 
-A **web-based application** to simulate and visualize various **CPU scheduling algorithms**, built with **HTML, CSS, JavaScript**, and visualized using **Google Charts** and **Chart.js**.
+A modern, interactive web application that visualizes and compares various CPU scheduling algorithms.  
+Users can dynamically add or remove processes, specify arrival and burst times, and select from multiple scheduling strategies.
 
-> ⚙️ Easily input process details, choose a scheduling algorithm, and visualize the CPU execution using **Gantt charts**, **timeline charts**, **performance comparisons**, and **animated process state transitions**.
-
----
-
-## 🚀 Features
-
-### ✅ Supported Algorithms
-
-* First Come First Serve (FCFS)
-* Shortest Job First (SJF)
-* Longest Job First (LJF)
-* Shortest Remaining Time First (SRTF)
-* Longest Remaining Time First (LRTF)
-* Round Robin (RR)
-* Priority Non-Preemptive (PNP)
-* Priority Preemptive (PP)
-* Highest Response Ratio Next (HRRN)
-
-### 🔧 Dynamic Process Management
-
-* Add/remove processes dynamically.
-* Add multiple CPU/IO burst pairs per process.
-* Input validation for:
-
-  * **Arrival Time ≥ 0**
-  * **Burst Time ≥ 1**
-  * **Priority ≥ 1**
-
-### 🧩 Interactive Configuration
-
-* Configure:
-
-  * **Time Quantum** for Round Robin
-  * **Context Switch Time**
-  * **Priority Type** (High or Low → Higher Priority)
-
-### 📊 Visualizations
-
-* **Gantt Chart** – Execution order with context switches
-* **Timeline Chart** – Per-process execution periods
-* **Final Table** – Completion Time, Turnaround Time, Waiting Time, Response Time
-* **Animated Time Log** – State transitions: *remain*, *ready*, *running*, *block*, *terminate*
-* **Bar Chart** – Compare algorithms by average performance
-* **Line Chart** – Round Robin metrics across time quanta
-
-### 🌐 Responsive Design
-
-* Mobile-friendly layout for charts and tables (basic support)
+The simulator displays:
+- A Gantt chart
+- A timeline chart
+- A final results table with metrics
+- An animated time log visualization of process state transitions
 
 ---
 
-## 📦 Project Structure
+## ✨ Features
 
-```
-cpu-scheduling-simulator/
-├── index.html        # Main HTML file
-├── style.css         # Styling
-├── script.js         # Core logic and visualizations
-├── favicon.png       # Favicon
-└── README.md         # Project documentation
-```
+- 🔁 **Add/Remove Processes**: Easily manage processes with customizable arrival and CPU burst times.
+- ⚙️ **Supported Algorithms**:
+  - First Come First Serve (FCFS)
+  - Shortest Job First (SJF)
+  - Shortest Remaining Time First (SRTF)
+  - Longest Job First (LJF)
+  - Longest Remaining Time First (LRTF)
+  - Round Robin (RR)
+  - Priority Non-Preemptive (PNP)
+  - Priority Preemptive (PP)
+  - Highest Response Ratio Next (HRRN)
+- 📊 **Visualizations**:
+  - **Gantt Chart** – Displays CPU scheduling over time
+  - **Timeline Chart** – Shows per-process execution periods
+  - **Time Log Visualization** – Animated states: Ready, Running, Blocked, Terminated
+- 🌗 **Dark Mode** – Toggle between light and dark themes
+- 📱 **Responsive Design** – Works on both desktop and mobile devices
+- 🏷️ **Process Queue Preview** – Interactive tags show live process queue
 
 ---
 
-## 🧪 Setup Instructions
+## 🛠️ Technologies Used
+
+- **HTML5**
+- **CSS3** (with animations and transitions)
+- **JavaScript**
+- **Google Charts API** (Gantt, Timeline)
+- **Chart.js** (for performance charts)
+
+---
+
+## 🚀 How to Use
 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/cpu-scheduling-simulator.git
-cd cpu-scheduling-simulator
+git clone https://github.com/harshitzofficial/CPU-SCHEDULAR
+cd scheduling-algorithms
+````
+
+### 2. Run the App
+
+Open `index.html` in your browser using a local server like Live Server in VS Code or `http-server`.
+
+### 3. Add Processes
+
+* Click **"Add Process"** to add a row.
+* Set **arrival time**, **burst times**, and (if needed) **priorities**.
+
+### 4. Select Algorithm
+
+* Choose a scheduling algorithm from the dropdown.
+
+### 5. Set Preferences
+
+* Toggle **priority preference** (high/low)
+* Enter **context switch time** and **time quantum** (for RR)
+
+### 6. Run Simulation
+
+* Click **"Calculate"** to view:
+
+  * Gantt Chart
+  * Timeline Chart
+  * Results Table
+  * Time Log Animation
+
+---
+
+## 📁 File Structure
+
+```
+scheduling-algorithms/
+├── index.html         # Main interface
+├── style.css          # Styling and themes
+├── script.js          # Logic and visualization
+├── cpu.png            # (Optional) App icon
+└── README.md          # This file
 ```
 
-### 2. Serve the Application
-
-#### Option 1: Using `http-server`
-
-```bash
-npm install -g http-server
-http-server .
-```
-
-Open: `http://localhost:8080`
-
-#### Option 2: Using VS Code Live Server
-
-Install the Live Server extension and click **"Go Live"** on `index.html`.
-
-#### Option 3: Open Directly
-
-Open `index.html` in a browser (may have limited JS functionality due to browser restrictions).
-
 ---
 
-## 📚 Dependencies
+## 📸 Screenshots
 
-Loaded via CDN:
+![image](https://github.com/user-attachments/assets/3a304f75-c02f-41d2-9a53-510b49bd3731)
 
-* [Google Charts](https://developers.google.com/chart)
-  `<script src="https://www.gstatic.com/charts/loader.js"></script>`
-* [Chart.js v2.9.4](https://www.chartjs.org/)
-  `<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>`
-* [Font Awesome v4.7](https://fontawesome.com/v4.7.0/)
-  `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">`
+ALGORITHMS:
+![image](https://github.com/user-attachments/assets/50424a55-2af6-4737-8123-08270a5477d6)
 
----
+![image](https://github.com/user-attachments/assets/b1428387-3c0c-489e-bfa1-162f3ff907a2)
 
-## 🔧 Usage
 
-### 1. Input Process Details
+![image](https://github.com/user-attachments/assets/731bfbd3-6cbd-4f19-be33-207dd487e6f3)
 
-* Start with P1 pre-filled.
-* Enter:
+![image](https://github.com/user-attachments/assets/6b5a16ee-21c0-4e38-a7f1-bdafcb6e3d15)
 
-  * Arrival Time
-  * Priority (if applicable)
-  * CPU/IO Burst Times
-* Use `+ / -` to add/remove CPU/IO burst pairs.
-* Add or delete processes using the respective buttons.
+TIME LOG SIMULTAION:
+![image](https://github.com/user-attachments/assets/e6f5aba1-622c-48c4-b483-41432661ded3)
+![image](https://github.com/user-attachments/assets/3e76eeba-7793-408b-ae12-2e33fec9de7f)
 
-### 2. Configure Preferences
 
-* Select algorithm from dropdown.
-* For **RR**, enter time quantum.
-* Enter context switch time.
-* Set priority direction for PP/PNP.
 
-### 3. Run Simulation
 
-Click **"Calculate"** and explore:
 
-* Gantt Chart
-* Timeline Chart
-* Metrics Table
-* Time Log Animation (`Start Time Log`)
-* Performance Comparison Chart
-* RR Metrics Line Chart (for RR only)
-
-### 4. Reset
-
-Click **Reset** to reload the app and clear all data.
-
----
-
-## 🔍 Example
-
-> Simulate Round Robin with time quantum 2 and context switch 1
-
-1. **Add two processes:**
-
-* **P1**: Arrival = 0, CPU = 3
-* **P2**: Arrival = 1, CPU = 4
-* **P3**: Arrival = 2, CPU = 5
-* **P4**: Arrival = 3, CPU = 1
-* **P5**: Arrival = 4, CPU = 2
-
-2. Choose **Round Robin**, set **quantum = 2**, **context switch = 1**
-3. Click **Calculate**
-4. View:
-
-   * Gantt Chart
-   * Time Log Animation
-   * Metrics Table
-   * RR Performance Chart
-   * Comparison with other algorithms
-
----
-![image](https://github.com/user-attachments/assets/a23ecc72-c815-44c7-b4e9-9838361eff36)
-
-![image](https://github.com/user-attachments/assets/68577d90-4027-44d3-9c05-14f8bd99121d)
-
-![image](https://github.com/user-attachments/assets/07e5e3cf-35ee-4da1-a301-0913dc8613c9)
-
-![image](https://github.com/user-attachments/assets/e4e18463-7219-4c03-8912-49627870d911)
-
-![image](https://github.com/user-attachments/assets/27e7b83c-4a39-45ed-a568-eb36dfb7d922)
-
-![image](https://github.com/user-attachments/assets/6bc54cd0-647f-4223-8341-98069151aa37)
-
-![image](https://github.com/user-attachments/assets/780783ae-fc5f-432e-b0be-4733aa775402)
 
 
 ---
 
-👨‍💻 Made with ❤️ by **Harshit Singh**
+## 📜 License
 
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 👨‍💻 Author
+
+**Harshit Singh**
+
+Made with ❤️ by Harshit Singh
