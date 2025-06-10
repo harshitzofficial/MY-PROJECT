@@ -52,8 +52,8 @@ The simulator displays:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/scheduling-algorithms.git
-cd scheduling-algorithms
+git clone https://github.com/harshitzofficial/CPU-SCHEDULAR
+cd CPU-SCHEDULAR
 
 ````
 
