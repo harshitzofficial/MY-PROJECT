@@ -53,7 +53,7 @@ The simulator displays:
 
 ```bash
 git clone https://github.com/harshitzofficial/CPU-SCHEDULAR
-cd scheduling-algorithms
+cd cpu-scheduling-simulator
 ````
 
 ### 2. Run the App
@@ -102,7 +102,7 @@ scheduling-algorithms/
 
 ![image](https://github.com/user-attachments/assets/3a304f75-c02f-41d2-9a53-510b49bd3731)
 
-ALGORITHMS:
+
 ![image](https://github.com/user-attachments/assets/50424a55-2af6-4737-8123-08270a5477d6)
 
 ![image](https://github.com/user-attachments/assets/b1428387-3c0c-489e-bfa1-162f3ff907a2)
@@ -112,7 +112,6 @@ ALGORITHMS:
 
 ![image](https://github.com/user-attachments/assets/6b5a16ee-21c0-4e38-a7f1-bdafcb6e3d15)
 
-TIME LOG SIMULTAION:
 ![image](https://github.com/user-attachments/assets/e6f5aba1-622c-48c4-b483-41432661ded3)
 ![image](https://github.com/user-attachments/assets/3e76eeba-7793-408b-ae12-2e33fec9de7f)
 
@@ -124,11 +123,6 @@ TIME LOG SIMULTAION:
 
 ---
 
-## 📜 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
 
 ## 👨‍💻 Author
 
