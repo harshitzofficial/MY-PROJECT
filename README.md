@@ -52,8 +52,9 @@ The simulator displays:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/harshitzofficial/CPU-SCHEDULAR
-cd cpu-scheduling-simulator
+git clone https://github.com/your-username/scheduling-algorithms.git
+cd scheduling-algorithms
+
 ````
 
 ### 2. Run the App
