@@ -105,7 +105,7 @@ scheduling-algorithms/
 ![image](https://github.com/user-attachments/assets/f55322a4-0567-49a2-af95-890be1fcd088)
 ![image](https://github.com/user-attachments/assets/48b501e3-5833-4a65-ac78-3546160e3104)
 ![image](https://github.com/user-attachments/assets/d520198d-07de-452d-97d9-946751c09992)
-![image](https://github.com/user-attachments/assets/cf694f84-096e-4fea-a2da-4345b443aacc)
+
 ![image](https://github.com/user-attachments/assets/93747bef-b4bf-4035-a657-78342772763f)
 
 
