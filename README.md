@@ -1,49 +1,69 @@
-## 💻 CPU Scheduling Simulator
+## 💻 CPU Scheduling Algorithm Visualizer
 ---
 
 ## 🧠 Project Description
 
-A modern, interactive web application that visualizes and compares various CPU scheduling algorithms.  
-Users can dynamically add or remove processes, specify arrival and burst times, and select from multiple scheduling strategies.
+An interactive web-based tool that simulates **CPU scheduling algorithms** and provides visual feedback in the form of:
 
-The simulator displays:
-- A Gantt chart
-- A timeline chart
-- A final results table with metrics
-- An animated time log visualization of process state transitions
+- 🟦 Gantt Chart  
+- 🟨 Timeline Chart  
+- 📊 Performance Metrics Table
+
+This tool is ideal for learning how processes are scheduled in an operating system and is useful for students, educators, and developers.
 
 ---
 
 ## ✨ Features
 
-- 🔁 **Add/Remove Processes**: Easily manage processes with customizable arrival and CPU burst times.
+- 🧩 **Custom Process Configuration** – Add/remove processes with arrival and burst times  
 - ⚙️ **Supported Algorithms**:
-  - First Come First Serve (FCFS)
-  - Shortest Job First (SJF)
-  - Shortest Remaining Time First (SRTF)
-  - Longest Job First (LJF)
-  - Longest Remaining Time First (LRTF)
-  - Round Robin (RR)
-  - Priority Non-Preemptive (PNP)
-  - Priority Preemptive (PP)
-  - Highest Response Ratio Next (HRRN)
-- 📊 **Visualizations**:
-  - **Gantt Chart** – Displays CPU scheduling over time
-  - **Timeline Chart** – Shows per-process execution periods
-  - **Time Log Visualization** – Animated states: Ready, Running, Blocked, Terminated
-- 🌗 **Dark Mode** – Toggle between light and dark themes
-- 📱 **Responsive Design** – Works on both desktop and mobile devices
-- 🏷️ **Process Queue Preview** – Interactive tags show live process queue
+  - First Come First Serve (**FCFS**)
+  - Shortest Job First (**SJF**)
+  - Shortest Remaining Time First (**SRTF**)
+  - Longest Job First (**LJF**)
+  - Longest Remaining Time First (**LRTF**)
+  - Round Robin (**RR**) – with customizable time quantum
+  - Priority Non-Preemptive (**PNP**)
+  - Priority Preemptive (**PP**)
+- 📥 **Load Sample Data** with a single click
+- 📊 **Output Visualizations**:
+  - Gantt Chart
+  - Timeline Chart
+  - Performance Metrics Table (Completion, Turnaround, Waiting, Response times)
+- 🔁 **Interactive Controls** – Run, reset, and recalculate simulations easily
+
+---
+
+## 🧪 Sample Load Configuration
+
+**Sample Process Table**:
+![image](https://github.com/user-attachments/assets/10659b12-bf83-4a1c-86bf-aa2a519e6411)
+
+
+**Algorithm Example**: Round Robin  
+**Time Quantum**: `2`
+
+---
+
+## 📊 Output Example
+
+### 🟦 Gantt Chart
+![image](https://github.com/user-attachments/assets/849cd398-b1d4-41b8-8f4c-1da0207b48f3)
+
+### 🟨 Timeline Chart
+![image](https://github.com/user-attachments/assets/251254ae-7640-4f18-bbf0-2ca9acadb0d4)
+
+### 📊 Performance Metrics
+![image](https://github.com/user-attachments/assets/f4a010a1-a96c-453d-9b6e-c99d576ba895)
+
 
 ---
 
 ## 🛠️ Technologies Used
 
-- **HTML5**
-- **CSS3** (with animations and transitions)
-- **JavaScript**
-- **Google Charts API** (Gantt, Timeline)
-- **Chart.js** (for performance charts)
+- **HTML5** – Structure of the app  
+- **CSS3** – Styling, layout, dark mode  
+- **JavaScript** – Core logic, simulation engine, and chart rendering
 
 ---
 
@@ -51,75 +71,39 @@ The simulator displays:
 
 ### 1. Clone the Repository
 
-```bash
-git clone https://github.com/harshitzofficial/CPU-SCHEDULAR
-cd CPU-SCHEDULAR
-
-````
-
-### 2. Run the App
-
-Open `index.html` in your browser using a local server like Live Server in VS Code or `http-server`.
-
-### 3. Add Processes
-
-* Click **"Add Process"** to add a row.
-* Set **arrival time**, **burst times**, and (if needed) **priorities**.
-
-### 4. Select Algorithm
-
-* Choose a scheduling algorithm from the dropdown.
-
-### 5. Set Preferences
-
-* Toggle **priority preference** (high/low)
-* Enter **context switch time** and **time quantum** (for RR)
-
-### 6. Run Simulation
-
-* Click **"Calculate"** to view:
-
-  * Gantt Chart
-  * Timeline Chart
-  * Results Table
-  * Time Log Animation
-
----
-
-## 📁 File Structure
-
 ```
-scheduling-algorithms/
-├── index.html         # Main interface
-├── style.css          # Styling and themes
-├── script.js          # Logic and visualization
-├── cpu.png            # (Optional) App icon
-└── README.md          # This file
+git clone https://github.com/harshitzofficial/MY-PROJECT
+cd MY-PROJECT
 ```
 
+2. Run the App
+You can open the project directly in your browser:
+
+Open index.html using any browser
+
+3. Add Processes
+Use the "Add Process" button to insert rows
+
+Fill in Arrival Time, Burst Time, and Priority (if applicable)
+
+4. Select Algorithm
+Choose from the dropdown list
+
+Set Time Quantum (for RR) or Priority Preferences (for PNP/PP)
+
+5. Run Simulation
+Click "Run Simultation"
+
+View Gantt chart, timeline, and result table with performance metrics
+
+
 ---
 
-## 📸 Screenshots
-![image](https://github.com/user-attachments/assets/79b4cf16-f386-4f67-a1dd-ee86d3525bc1)
-![image](https://github.com/user-attachments/assets/a8f66ac4-26d8-46b6-972b-19eb8edb11d6)
-![image](https://github.com/user-attachments/assets/f55322a4-0567-49a2-af95-890be1fcd088)
-![image](https://github.com/user-attachments/assets/48b501e3-5833-4a65-ac78-3546160e3104)
-![image](https://github.com/user-attachments/assets/d520198d-07de-452d-97d9-946751c09992)
+👨‍💻 Author
+Harshit Singh
+💡 Engineering Student | Passionate about OS Concepts and Visual Tools
+🔗 GitHub
 
-https://github.com/user-attachments/assets/c67df9b2-b368-4d20-896a-056504325163
-
-![image](https://github.com/user-attachments/assets/93747bef-b4bf-4035-a657-78342772763f)
-
-
-
-
-
-
----
-
-
-## 👨‍💻 Author
-
-**Harshit Singh**
-
-Made with ❤️ by Harshit Singh
+⭐ Support
+If you found this helpful, consider ⭐ starring the repository!
+👉 https://github.com/harshitzofficial/MY-PROJECT
