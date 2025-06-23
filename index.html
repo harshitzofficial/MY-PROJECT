@@ -3,137 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scheduling Algorithms</title>
-    <link rel="icon" type="image/png" href="favic.png">
-    <link rel="stylesheet" hrefs="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>CPU Scheduling Algorithm Visualizer</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <button id="dark-mode-toggle">Toggle Dark Mode</button>
-    <div class="header">
-        <h1>Scheduling Algorithms</h1>
-        <p>Visualize and compare process scheduling techniques</p>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>CPU Scheduling Algorithm Visualizer</h1>
+           
+        </header>
+
+        <!-- Input Section -->
+        <section class="input-section">
+            <div class="card">
+                <div class="card__body">
+                    <h2>Process Configuration</h2>
+                    
+                    <!-- Algorithm Selection -->
+                    <div class="form-group">
+                        <label class="form-label" for="algorithm">Scheduling Algorithm</label>
+                        <select id="algorithm" class="form-control">
+                            <option value="fcfs">First Come First Serve (FCFS)</option>
+                            <option value="sjf">Shortest Job First (SJF)</option>
+                            <option value="srtf">Shortest Remaining Time First (SRTF)</option>
+                            <option value="ljf">Longest Job First (LJF)</option>
+                            <option value="lrtf">Longest Remaining Time First (LRTF)</option>
+                            <option value="rr">Round Robin (RR)</option>
+                            <option value="pnp">Priority Non-Preemptive (PNP)</option>
+                            <option value="pp">Priority Preemptive (PP)</option>
+                        </select>
+                    </div>
+
+                    <!-- Time Quantum for Round Robin -->
+                    <div class="form-group" id="quantumGroup" style="display: none;">
+                        <label class="form-label" for="timeQuantum">Time Quantum</label>
+                        <input type="number" id="timeQuantum" class="form-control" value="2" min="1">
+                    </div>
+
+                    <!-- Process Input -->
+                    <div class="process-input">
+                        <h3>Add Process</h3>
+                        <div class="input-row">
+                            <div class="form-group">
+                                <label class="form-label" for="processId">Process ID</label>
+                                <input type="text" id="processId" class="form-control" placeholder="P1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="arrivalTime">Arrival Time</label>
+                                <input type="number" id="arrivalTime" class="form-control" min="0" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="burstTime">Burst Time</label>
+                                <input type="number" id="burstTime" class="form-control" min="1" value="1">
+                            </div>
+                            <div class="form-group" id="priorityGroup">
+                                <label class="form-label" for="priority">Priority</label>
+                                <input type="number" id="priority" class="form-control" min="1" value="1">
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button id="addProcess" class="btn btn--primary">Add Process</button>
+                            <button id="loadSample" class="btn btn--secondary">Load Sample</button>
+                            <button id="clearAll" class="btn btn--outline">Clear All</button>
+                        </div>
+                    </div>
+
+                    <!-- Process List -->
+                    <div class="process-list">
+                        <h3>Current Processes</h3>
+                        <div id="processTable" class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Process ID</th>
+                                        <th>Arrival Time</th>
+                                        <th>Burst Time</th>
+                                        <th>Priority</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="processTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <button id="runSimulation" class="btn btn--primary btn--lg btn--full-width mt-8">Run Simulation</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visualization Section -->
+        <section class="visualization-section" id="visualizationSection" style="display: none;">
+            <div class="card">
+                <div class="card__body">
+                    <h2>Gantt Chart</h2>
+                    <div id="ganttChart" class="chart-container"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card__body">
+                    <h2>Timeline Chart</h2>
+                    <div id="timelineChart" class="chart-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <div class="card">
+                <div class="card__body">
+                    <h2>Performance Metrics</h2>
+                    <div id="resultsTable" class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Process</th>
+                                    <th>Arrival</th>
+                                    <th>Burst</th>
+                                    <th>Completion</th>
+                                    <th>Turnaround</th>
+                                    <th>Waiting</th>
+                                    <th>Response</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resultsTableBody">
+                            </tbody>
+                            <tfoot id="averageRow">
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
-    <h3>Instructions:</h3>
-    <ol class="instructions">
-        <li data-tooltip="If two processes have the same value, the one with the lower ID is chosen.">Tiebreaker is Process ID.</li>
-        <li data-tooltip="Total burst time is used as the criterion for shortest/longest job selection.">When burst time is criteria, total burst time is taken into consideration.</li>
-        <li data-tooltip="Context switch time is not added at the very start or end of the schedule.">Context Switch not considered at start and end of processes.</li>
-    </ol>
-
-    <h3>Preferences:</h3>
-    <ol class="preferences">
-        <li>
-            Priority: 1 is
-            <button id="priority-toggle-btn">
-                <span id="priority-preference">high</span>
-                <i class="fa fa-refresh"></i>
-            </button>
-        </li>
-    </ol>
-    
-
-    <form id="algorithms-form">
-        <label for="algo"><h3>Algorithms:</h3></label>
-        <select name="algo" id="algo">
-            <option value="fcfs">First Come First Serve (FCFS)</option>
-            <option value="sjf">Shortest Job First (SJF)</option>
-            <option value="ljf">Longest Job First (LJF)</option>
-            <option value="srtf">Shortest Remaining Job First (SRTF)</option>
-            <option value="lrtf">Longest Remaining Job First (LRTF)</option>
-            <option value="rr">Round Robin</option>
-            <option value="pnp">Priority (Non Preemptive)</option>
-            <option value="pp">Priority (Preemptive)</option>
-            <option value="hrrn">Highest Response Ratio Next (HRRN)</option>
-        </select>
-    </form>
-    <br>
-
-
-
-    <table class="main-table">
-        <thead>
-            <tr>
-                <th class="process-id">Process ID</th>
-                <th class="priority hide">Priority</th>
-                <th class="arrival-time">Arrival Time</th>
-                <th class="process-time" colspan="1">Process Time</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="process-id" rowspan="2">P1</td>
-                <td class="priority hide" rowspan="2">
-                    <input type="number" min="1" step="1" value="1">
-                </td>
-                <td class="arrival-time" rowspan="2">
-                    <input type="number" min="0" step="1" value="0">
-                </td>
-                <td class="process-time cpu process-heading" colspan="1">CPU</td>
-                <td class="process-btn">
-                    <button type="button" class="add-process-btn">+</button>
-                </td>
-                <td class="process-btn">
-                    <button type="button" class="remove-process-btn">-</button>
-                </td>
-            </tr>
-            <tr>
-                <td class="process-time cpu process-input">
-                    <input type="number" min="1" step="1" value="1">
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <br>
-
-    <div class="controls">
-        <button type="button" class="add-btn">Add Process</button>
-        <button type="button" class="remove-btn">Delete Process</button>
-    </div>
-
-    <div id="context-switch-div">
-        <br>
-        <label for="context-switch">Context Switch Time : </label>
-        <input type="number" id="context-switch" min="0" step="1" value="0">
-    </div>
-
-    <div id="time-quantum" class="hide">
-        <br>
-        <label for="tq">Time Quantum : </label>
-        <input type="number" id="tq" min="1" step="1" value="1">
-    </div>
-
-    <br>
-
-    <div class="controls">
-        <button type="button" id="calculate">Calculate</button>
-        <button type="button" id="reset" onClick="window.location.reload();">Reset</button>
-    </div>
-
-    <div id="output"></div>
-
-    <!-- Chart Libraries -->
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"
-        integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
-        crossorigin="anonymous"></script>
-
-    <!-- Your Script -->
-    <script src="script.js"></script>
-
-    <!-- Dark Mode Toggle Script -->
-    <script>
-        const toggleBtn = document.getElementById('dark-mode-toggle');
-        toggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            toggleBtn.querySelector('i').classList.toggle('fa-moon-o');
-            toggleBtn.querySelector('i').classList.toggle('fa-sun-o');
-        });
-    </script>
-
+    <script src="app.js"></script>
 </body>
-
 </html>
