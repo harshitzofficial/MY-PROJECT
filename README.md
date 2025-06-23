@@ -66,44 +66,52 @@ This tool is ideal for learning how processes are scheduled in an operating syst
 - **JavaScript** – Core logic, simulation engine, and chart rendering
 
 ---
-
 ## 🚀 How to Use
 
-### 1. Clone the Repository
+1. Clone the Repository
 
-```
+```bash
 git clone https://github.com/harshitzofficial/MY-PROJECT
 cd MY-PROJECT
 ```
 
-2. Run the App
+2. Run the App  
 You can open the project directly in your browser:
 
-Open index.html using any browser
+- Open `index.html` using any modern browser  
+*or*  
+- Use a local server like Live Server in VS Code  
+*or*  
+- Use `http-server`:
 
-3. Add Processes
-Use the "Add Process" button to insert rows
+```bash
+npx http-server .
+```
 
-Fill in Arrival Time, Burst Time, and Priority (if applicable)
+3. Add Processes  
+- Click the **"Add Process"** button to insert a row  
+- Fill in **Arrival Time**, **Burst Time**, and **Priority** (if applicable)
 
-4. Select Algorithm
-Choose from the dropdown list
+4. Select Algorithm  
+- Choose a scheduling algorithm from the dropdown  
+- Set **Time Quantum** (for Round Robin) or **Priority Preferences** (for PNP/PP)
 
-Set Time Quantum (for RR) or Priority Preferences (for PNP/PP)
-
-5. Run Simulation
-Click "Run Simultation"
-
-View Gantt chart, timeline, and result table with performance metrics
+5. Run Simulation  
+- Click **"Run Simulation"**  
+- View the **Gantt Chart**, **Timeline Chart**, and **Performance Metrics Table**
 
 
 ---
 
-👨‍💻 Author
-Harshit Singh
-💡 Engineering Student | Passionate about OS Concepts and Visual Tools
-🔗 GitHub
+## 👨‍💻 Author
 
-⭐ Support
-If you found this helpful, consider ⭐ starring the repository!
-👉 https://github.com/harshitzofficial/MY-PROJECT
+**Harshit Singh**  
+💡 Engineering Student | Passionate about OS Concepts and Visual Tools  
+🔗 [GitHub](https://github.com/harshitzofficial)
+
+---
+## ⭐ Support
+
+If you found this helpful, consider ⭐ starring the repository!  
+👉 [https://github.com/harshitzofficial/MY-PROJECT](https://github.com/harshitzofficial/MY-PROJECT)
+
