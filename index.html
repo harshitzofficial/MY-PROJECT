@@ -3,143 +3,640 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPU Scheduling Algorithm Visualizer</title>
-    <link rel="stylesheet" href="style.css">
+    <title>TimeSlice Studio - CPU Scheduling Visualizer</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* -------------------------   GLOBAL STYLES   ------------------------- */
+        /* Reset default browser styles and use border-box model for layout */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS variables for consistent theme colors and shadows */
+        :root {
+            --primary-color: #4c83bb;
+            --secondary-color: #2563eb;
+            --accent-color: #60a5fa;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #0a0c12;   /* Page background */
+            --darker-color: #05060a; /* Footer background */
+            --light-color: #161821;  /* Card backgrounds */
+            --lighter-color: #232533; /* Rarely used */
+            --text-primary: #e5e7ef;
+            --text-secondary: #7c879d;
+            --border-color: #232533;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.58);   /*  offset-x offset-y blur-radius color; */
+            --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.68);
+            --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.87);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;  /* Line spacing */
+            color: var(--text-primary);/* Text color */
+            background-color: var(--dark-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;/* Center the container horizontally */
+            padding: 0 20px;  /* Add horizontal padding */
+        }
+
+        /* -------------------------   NAVBAR STYLES   ------------------------- */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(10, 12, 18, 0.98); /* Semi-transparent dark */
+            backdrop-filter: blur(10px);         /* Blurred glass effect */
+            border-bottom: 2px solid var(--border-color);
+            z-index: 1000; /* Keep navbar above other elements */
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            /* When user scrolls, background gets fully opaque and shadowed */
+            background: rgba(10, 12, 18, 1);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 20px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+            padding: 2px 0;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link::after {
+            /* Underline effect on hover/active */
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Push page content below fixed navbar */
+        .main-content {
+            padding-top: 80px;
+        }
+
+        /* Responsive styles for navbar */
+        @media (max-width: 800px) {
+            /* Stack navbar items vertically on small screens */
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            /* Adjust spacing and font size for nav links */
+            .nav-menu {
+                gap: 1.2rem;
+                font-size: 0.97rem;
+            }
+        }
+
+        /* -------------------------   FEATURES SECTION   ------------------------- */
+        .features-section {
+            margin: 70px auto 0 auto;
+            max-width: 1150px;
+            padding: 0 20px;
+        }
+        .features-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 26px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 32px;
+            margin-bottom: 30px;
+        }
+        .feature-card {
+            background: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform .18s, box-shadow .18s;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.04);
+            box-shadow: var(--shadow-medium);
+        }
+        .feature-card i {
+            font-size: 2.5rem;
+            margin-bottom: 18px;
+            color: var(--primary-color);
+        }
+        .feature-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 1.18rem;
+            margin-bottom: 6px;
+        }
+        .feature-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* -------------------------   HERO SECTION   ------------------------- */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 64vh;
+            padding-top: 60px;
+            padding-bottom: 30px;
+            text-align: center;
+        }
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: var(--primary-color); /* fallback if gradient doesn't work */
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            background: linear-gradient(90deg, var(--primary-color) 60%, #fff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 1.22rem;
+            max-width: 530px;
+            margin-bottom: 32px;
+        }
+        .hero-btn {
+            background: var(--primary-color);
+            color: var(--dark-color);
+            font-weight: bold;
+            font-size: 1.13rem;
+            border: none;
+            border-radius: 8px;
+            padding: 16px 40px;
+            box-shadow: var(--shadow-medium);
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .18s, color .18s, box-shadow .18s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hero-btn:hover {
+            background: var(--secondary-color);
+            color: #fff;
+            box-shadow: var(--shadow-heavy);
+        }
+
+        /* -------------------------   ALGORITHMS SECTION   ------------------------- */
+        .algos-section {
+            margin: 70px auto;
+            max-width: 1150px;
+            padding: 0 20px;
+        }
+        .algos-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 26px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .algos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 28px;
+        }
+        .algo-card {
+            background: var(--light-color);
+            border-radius: var(--border-radius);
+            padding: 28px 22px 22px 22px;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            flex-direction: column;
+            transition: transform .18s, box-shadow .18s;
+            position: relative;
+        }
+        .algo-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: var(--shadow-medium);
+        }
+        .algo-title {
+            font-size: 1.13rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .algo-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 7px;
+        }
+        .algo-details {
+            font-size: 0.97rem;
+            color: #9fdaf1;
+            margin-bottom: 7px;
+        }
+        .algo-learn-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.99rem;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .algo-learn-link i {
+            font-size: 1rem;
+        }
+
+        /* -------------------------   FOOTER   ------------------------- */
+        .footer {
+            background: var(--darker-color);
+            color: var(--text-secondary);
+            font-size: 1.03rem;
+            padding: 0;
+            margin-top: 50px;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            box-shadow: 0 -2px 14px rgba(0,0,0,0.3);
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 18px;
+        }
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 34px;
+            justify-content: space-between;
+            padding: 44px 0 0 0;
+        }
+        .footer-section {
+            flex: 1 1 210px;
+            min-width: 210px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .footer-section h4 {
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-section ul li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .footer-section ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .footer-section ul li a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        /* Contact Me Section Alignment */
+        .footer-section:last-child {
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        .footer-section ul li span {
+            display: flex;
+            align-items: center;
+            margin-right: 6px;
+            min-width: 20px;
+        }
+        /* Footer bottom */
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.98rem;
+            margin-top: 28px;
+            padding-bottom: 24px;
+        }
+        .footer-bottom a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* -------------------------   MEDIA QUERIES   ------------------------- */
+        @media (max-width: 900px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 18px;
+            }
+            .footer-section {
+                min-width: 0;
+                margin-bottom: 10px;
+            }
+        }
+        @media (max-width: 700px) {
+            .hero-title { font-size: 2rem; }
+            .features-title, .algos-title { font-size: 1.3rem; }
+            .footer-content { flex-direction: column; gap: 14px; }
+            .footer-section {
+                align-items: flex-start !important;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>CPU Scheduling Algorithm Visualizer</h1>
-           
-        </header>
+    <!-- ===================== NAVBAR ===================== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo and Title (left) -->
+            <a class="nav-logo" href="#"><i class="fas fa-microchip"></i>TimeSlice Studio</a>
+            <!-- Navigation Menu (right) -->
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active">Home</a></li>
+                <li><a href="main.html" class="nav-link">Visualizer</a></li>
+                <li><a href="#algos" class="nav-link">Theory</a></li>
+                <li><a href="aboutme.html" class="nav-link">About Me</a></li>
+            </ul>
+        </div>
+    </nav>
 
-        <!-- Input Section -->
-        <section class="input-section">
-            <div class="card">
-                <div class="card__body">
-                    <h2>Process Configuration</h2>
-                    
-                    <!-- Algorithm Selection -->
-                    <div class="form-group">
-                        <label class="form-label" for="algorithm">Scheduling Algorithm</label>
-                        <select id="algorithm" class="form-control">
-                            <option value="fcfs">First Come First Serve (FCFS)</option>
-                            <option value="sjf">Shortest Job First (SJF)</option>
-                            <option value="srtf">Shortest Remaining Time First (SRTF)</option>
-                            <option value="ljf">Longest Job First (LJF)</option>
-                            <option value="lrtf">Longest Remaining Time First (LRTF)</option>
-                            <option value="rr">Round Robin (RR)</option>
-                            <option value="pnp">Priority Non-Preemptive (PNP)</option>
-                            <option value="pp">Priority Preemptive (PP)</option>
-                        </select>
-                    </div>
+    <div class="main-content">
+    <!-- ===================== HERO SECTION ===================== -->
+    <section class="hero">
+        <div class="hero-title"><i class="fas fa-desktop"></i> Visualize CPU Scheduling Algorithms</div>
+        <div class="hero-desc">
+            TimeSlice Studio brings your process scheduling concepts to life.<br>
+            Input your processes, arrival, and burst times — get Gantt charts, Timeline Chart and Performance Metrics instantly!
+        </div>
+        <a class="hero-btn" href="main.html"s><i class="fas fa-play"></i>Launch</a>
+    </section>
 
-                    <!-- Time Quantum for Round Robin -->
-                    <div class="form-group" id="quantumGroup" style="display: none;">
-                        <label class="form-label" for="timeQuantum">Time Quantum</label>
-                        <input type="number" id="timeQuantum" class="form-control" value="2" min="1">
-                    </div>
-
-                    <!-- Process Input -->
-                    <div class="process-input">
-                        <h3>Add Process</h3>
-                        <div class="input-row">
-                            <div class="form-group">
-                                <label class="form-label" for="processId">Process ID</label>
-                                <input type="text" id="processId" class="form-control" placeholder="P1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="arrivalTime">Arrival Time</label>
-                                <input type="number" id="arrivalTime" class="form-control" min="0" value="0">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="burstTime">Burst Time</label>
-                                <input type="number" id="burstTime" class="form-control" min="1" value="1">
-                            </div>
-                            <div class="form-group" id="priorityGroup">
-                                <label class="form-label" for="priority">Priority</label>
-                                <input type="number" id="priority" class="form-control" min="1" value="1">
-                            </div>
-                        </div>
-                        <div class="button-group">
-                            <button id="addProcess" class="btn btn--primary">Add Process</button>
-                            <button id="loadSample" class="btn btn--secondary">Load Sample</button>
-                            <button id="clearAll" class="btn btn--outline">Clear All</button>
-                        </div>
-                    </div>
-
-                    <!-- Process List -->
-                    <div class="process-list">
-                        <h3>Current Processes</h3>
-                        <div id="processTable" class="table-container">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Process ID</th>
-                                        <th>Arrival Time</th>
-                                        <th>Burst Time</th>
-                                        <th>Priority</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="processTableBody">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <button id="runSimulation" class="btn btn--primary btn--lg btn--full-width mt-8">Run Simulation</button>
-                </div>
+    <!-- ===================== FEATURES SECTION ===================== -->
+    <section class="features-section" id="features">
+        <div class="features-title"><i class="fas fa-bolt"></i> Why Use TimeSlice Studio?</div>
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <i class="fas fa-chart-bar"></i>
+                <div class="feature-title">Gantt Chart Visualization</div>
+                <div class="feature-desc">See process execution as easy-to-read timelines and charts.</div>
             </div>
-        </section>
-
-        <!-- Visualization Section -->
-        <section class="visualization-section" id="visualizationSection" style="display: none;">
-            <div class="card">
-                <div class="card__body">
-                    <h2>Gantt Chart</h2>
-                    <div id="ganttChart" class="chart-container"></div>
-                </div>
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <i class="fas fa-table"></i>
+                <div class="feature-title">Automatic Metrics Table</div>
+                <div class="feature-desc">Get waiting time, turnaround time, and completion instantly.</div>
             </div>
-
-            <div class="card">
-                <div class="card__body">
-                    <h2>Timeline Chart</h2>
-                    <div id="timelineChart" class="chart-container"></div>
-                </div>
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <i class="fas fa-balance-scale"></i>
+                <div class="feature-title">Algorithm Comparison</div>
+                <div class="feature-desc">Compare multiple scheduling strategies side by side.</div>
             </div>
-        </section>
-
-        <!-- Results Section -->
-        <section class="results-section" id="resultsSection" style="display: none;">
-            <div class="card">
-                <div class="card__body">
-                    <h2>Performance Metrics</h2>
-                    <div id="resultsTable" class="table-container">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Process</th>
-                                    <th>Arrival</th>
-                                    <th>Burst</th>
-                                    <th>Completion</th>
-                                    <th>Turnaround</th>
-                                    <th>Waiting</th>
-                                    <th>Response</th>
-                                </tr>
-                            </thead>
-                            <tbody id="resultsTableBody">
-                            </tbody>
-                            <tfoot id="averageRow">
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
+            <!-- Feature 4 -->
+            <div class="feature-card">
+                <i class="fas fa-graduation-cap"></i>
+                <div class="feature-title">Great for Learning</div>
+                <div class="feature-desc">Perfect for students and teachers to understand OS concepts.</div>
             </div>
-        </section>
+        </div>
+    </section>
+
+    <!-- ===================== ALGORITHMS & THEORY SECTION ===================== -->
+    <section class="algos-section" id="algos">
+        <div class="algos-title"><i class="fas fa-brain"></i> CPU Scheduling Concepts, Supported Algorithms & Analysis</div>
+        <div class="algos-grid">
+            <!-- FCFS Algorithm -->
+            <div class="algo-card">
+                <div class="algo-title"><i class="fas fa-stream"></i> First Come First Serve (FCFS)</div>
+                <div class="algo-desc">
+                    FCFS is the simplest CPU scheduling algorithm, where the process that arrives first gets executed first. It's easy to implement but can cause longer waiting times if a long process arrives early ("convoy effect").
+                </div>
+                <div class="algo-details">
+                    <b>Time Complexity:</b> O(n)<br>
+                    <b>Analysis:</b> Simple, no context switching, but high average waiting time possible.
+                </div>
+                <a class="algo-learn-link" href="https://www.geeksforgeeks.org/operating-systems/program-for-fcfs-cpu-scheduling-set-1/" target="_blank">
+                    <i class="fas fa-link"></i> Read more
+                </a>
+            </div>
+            <!-- SJF Algorithm -->
+            <div class="algo-card">
+                <div class="algo-title"><i class="fas fa-sort-amount-up-alt"></i> Shortest Job First (SJF)</div>
+                <div class="algo-desc">
+                    SJF selects the process with the shortest burst time from the ready queue. It minimizes average waiting time but can lead to starvation of longer processes if short jobs keep coming.
+                </div>
+                <div class="algo-details">
+                    <b>Time Complexity:</b> O(n log n) (with sorting)<br>
+                    <b>Analysis:</b> Optimal average waiting time, but long jobs may starve.
+                </div>
+                <a class="algo-learn-link" href="https://www.geeksforgeeks.org/program-for-shortest-job-first-or-sjf-cpu-scheduling-set-1-non-preemptive/" target="_blank">
+                    <i class="fas fa-link"></i> Read more
+                </a>
+            </div>
+            <!-- SRTF Algorithm -->
+            <div class="algo-card">
+                <div class="algo-title"><i class="fas fa-stopwatch"></i> Shortest Remaining Time First (SRTF)</div>
+                <div class="algo-desc">
+                    SRTF is the preemptive version of SJF. The process with the least remaining time to execute is processed next, possibly interrupting a running process. This improves turnaround but increases context switching.
+                </div>
+                <div class="algo-details">
+                    <b>Time Complexity:</b> O(n²)<br>
+                    <b>Analysis:</b> Optimal for average wait, but frequent context switches.
+                </div>
+                <a class="algo-learn-link" href="https://www.geeksforgeeks.org/shortest-remaining-time-first-preemptive-sjf-scheduling-algorithm/" target="_blank">
+                    <i class="fas fa-link"></i> Read more
+                </a>
+            </div>
+            <!-- RR Algorithm -->
+            <div class="algo-card">
+                <div class="algo-title"><i class="fas fa-redo"></i> Round Robin (RR)</div>
+                <div class="algo-desc">
+                    Round Robin assigns each process a fixed time quantum in a cycle. Best for time-sharing systems, it ensures responsiveness but can lead to more context switches.
+                </div>
+                <div class="algo-details">
+                    <b>Time Complexity:</b> O(n)<br>
+                    <b>Analysis:</b> Good response for short jobs, but overhead from frequent switching.
+                </div>
+                <a class="algo-learn-link" href="https://www.geeksforgeeks.org/round-robin-scheduling-with-different-arrival-times/" target="_blank">
+                    <i class="fas fa-link"></i> Read more
+                </a>
+            </div>
+            <!-- Priority Scheduling -->
+            <div class="algo-card">
+                <div class="algo-title"><i class="fas fa-flag"></i> Priority Scheduling</div>
+                <div class="algo-desc">
+                    Each process is assigned a priority. The CPU is allocated to the process with the highest priority (lowest number). Can be preemptive or non-preemptive, but may cause starvation for low-priority processes.
+                </div>
+                <div class="algo-details">
+                    <b>Time Complexity:</b> O(n²) (with sorting)<br>
+                    <b>Analysis:</b> Risk of starvation for low-priority jobs; "aging" can be used.
+                </div>
+                <a class="algo-learn-link" href="https://www.geeksforgeeks.org/operating-systems/program-for-priority-cpu-scheduling-set-1/" target="_blank">
+                    <i class="fas fa-link"></i> Read more
+                </a>
+            </div>
+            <!-- LJF Algorithm -->
+            <div class="algo-card">
+                <div class="algo-title"><i class="fas fa-long-arrow-alt-up"></i> Longest Job First (LJF)</div>
+                <div class="algo-desc">
+                    LJF schedules the process with the longest burst time first. It is rarely used in practice as it can cause high waiting times for smaller jobs.
+                </div>
+                <div class="algo-details">
+                    <b>Time Complexity:</b> O(n log n) (with sorting)<br>
+                    <b>Analysis:</b> High wait for short jobs, rarely used in practice.
+                </div>
+                <a class="algo-learn-link" href="https://www.geeksforgeeks.org/operating-systems/difference-between-longest-job-first-ljf-and-round-robin-rr-scheduling-algorithms/" target="_blank">
+                    <i class="fas fa-link"></i> Read more
+                </a>
+            </div>
+            <!-- Gantt Chart Info -->
+            <div class="algo-card">
+                <div class="algo-title"><i class="fas fa-chart-gantt"></i> What is a Gantt Chart?</div>
+                <div class="algo-desc">
+                    A Gantt chart is a visual timeline that shows the execution order and duration of each process in CPU scheduling, making it easier to understand and analyze scheduling behavior.
+                </div>
+                <div class="algo-details">
+                    <b>Purpose:</b> Visualization tool for CPU scheduling<br>
+                    <b>Analysis:</b> Helps to understand process execution order and timing.
+                </div>
+                <a class="algo-learn-link" href="https://www.geeksforgeeks.org/operating-systems/short-note-on-gantt-chart/" target="_blank">
+                    <i class="fas fa-link"></i> Read more
+                </a>
+            </div>
+        </div>
+    </section>
     </div>
 
-    <script src="app.js"></script>
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <!-- Project Description -->
+                <div class="footer-section">
+                    <h4><i class="fas fa-microchip"></i> TimeSlice Studio</h4>
+                    <p>Interactive platform for visualizing and exploring complex CPU scheduling algorithms and operating system concepts.</p>
+                </div>
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h4><i class="fas fa-link"></i> Quick Links</h4>
+                    <ul>
+                        <li><a href="main.html"><i class="fas fa-cogs"></i> Visualizer</a></li>
+                        <li><a href="#algos"><i class="fas fa-book"></i> Theory</a></li>
+                        <li><a href="aboutme.html" class="nav-link"><i class="fas fa-user"></i> About Me</a></li>
+                    </ul>
+                </div>
+                <!-- Algorithms List -->
+                <div class="footer-section">
+                    <h4><i class="fas fa-brain"></i> Algorithms</h4>
+                    <ul>
+                        <li><a href="#algos"><i class="fas fa-stream"></i> FCFS</a></li>
+                        <li><a href="#algos"><i class="fas fa-sort-amount-up-alt"></i> SJF</a></li>
+                        <li><a href="#algos"><i class="fas fa-stopwatch"></i> SRTF</a></li>
+                        <li><a href="#algos"><i class="fas fa-redo"></i> RR</a></li>
+                        <li><a href="#algos"><i class="fas fa-flag"></i> Priority</a></li>
+                        <li><a href="#algos"><i class="fas fa-long-arrow-alt-up"></i> LJF</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Information -->
+                <div class="footer-section">
+                    <h4><i class="fas fa-envelope"></i> Contact Me</h4>
+                    <ul>
+                        <li><span><i class="fas fa-phone-alt"></i></span><a href="tel:8076148313">+91 8076148313</a></li>
+                        <li><span><i class="fas fa-envelope"></i></span><a href="mailto:harshit.official.281005@gmail.com">harshit.official.281005@gmail.com</a></li>
+                        <li><span><i class="fab fa-linkedin"></i></span><a href="https://www.linkedin.com/in/harshit-singh-7a209a282/" target="_blank">https://www.linkedin.com/in/harshit-singh-7a209a282/</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>
+                    &copy; 2025 Algorithm Visualizers Hub. Created and maintained by
+                    <a href="https://www.linkedin.com/in/harshit-singh-7a209a282/" target="_blank">Harshit Singh</a>.
+                </p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
