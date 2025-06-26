@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeSlice Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>TimeSlice Studio</h1>
+            <br>
+           
+        </header>
+
+        <!-- Input Section -->
+        <section class="input-section">
+            <div class="card">
+                <div class="card__body">
+                    <h2>Process Configuration</h2>
+                    
+                    <!-- Algorithm Selection -->
+                    <div class="form-group">
+                        <label class="form-label" for="algorithm">Scheduling Algorithm</label>
+                        <select id="algorithm" class="form-control">
+                            <option value="fcfs">First Come First Serve (FCFS)</option>
+                            <option value="sjf">Shortest Job First (SJF)</option>
+                            <option value="srtf">Shortest Remaining Time First (SRTF)</option>
+                            <option value="ljf">Longest Job First (LJF)</option>
+                            <option value="lrtf">Longest Remaining Time First (LRTF)</option>
+                            <option value="rr">Round Robin (RR)</option>
+                            <option value="pnp">Priority Non-Preemptive (PNP)</option>
+                            <option value="pp">Priority Preemptive (PP)</option>
+                        </select>
+                    </div>
+
+                    <!-- Time Quantum for Round Robin -->
+                    <div class="form-group" id="quantumGroup" style="display: none;">
+                        <label class="form-label" for="timeQuantum">Time Quantum</label>
+                        <input type="number" id="timeQuantum" class="form-control" value="2" min="1">
+                    </div>
+
+                    <!-- Process Input -->
+                    <div class="process-input">
+                        <h3>Add Process</h3>
+                        <div class="input-row">
+                            <div class="form-group">
+                                <label class="form-label" for="processId">Process ID</label>
+                                <input type="text" id="processId" class="form-control" placeholder="P1">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="arrivalTime">Arrival Time</label>
+                                <input type="number" id="arrivalTime" class="form-control" min="0" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="burstTime">Burst Time</label>
+                                <input type="number" id="burstTime" class="form-control" min="1" value="1">
+                            </div>
+                            <div class="form-group" id="priorityGroup">
+                                <label class="form-label" for="priority">Priority</label>
+                                <input type="number" id="priority" class="form-control" min="1" value="1">
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button id="addProcess" class="btn btn--primary">Add Process</button>
+                            <button id="loadSample" class="btn btn--secondary">Load Sample</button>
+                            <button id="clearAll" class="btn btn--outline">Clear All</button>
+                        </div>
+                    </div>
+
+                    <!-- Process List -->
+                    <div class="process-list">
+                        <br>
+                        <h3>Current Processes</h3>
+                        <div id="processTable" class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Process ID</th>
+                                        <th>Arrival Time</th>
+                                        <th>Burst Time</th>
+                                        <th>Priority</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="processTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <button id="runSimulation" class="btn btn--primary btn--lg btn--full-width mt-8">Run Simulation</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visualization Section -->
+        <section class="visualization-section" id="visualizationSection" style="display: none;">
+            <div class="card">
+                <div class="card__body">
+                    <h2>Gantt Chart</h2>
+                    <div id="ganttChart" class="chart-container"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card__body">
+                    <h2>Timeline Chart</h2>
+                    <div id="timelineChart" class="chart-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <div class="card">
+                <div class="card__body">
+                <h2>Performance Metrics</h2>
+                    <div id="resultsTable" class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th>Process</th>
+                                <th>Arrival</th>
+                                <th>Burst</th>
+                                <th>Completion</th>
+                                <th>Turnaround</th>
+                                <th>Waiting</th>
+                                <th>Response</th>
+                                </tr>
+                            </thead>
+                        <tbody id="resultsTableBody">
+                            <!-- Data rows go here -->
+                        </tbody>
+                        <tfoot id="averageRow">
+                            <!-- Average row goes here -->
+                        </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
