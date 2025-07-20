@@ -83,7 +83,7 @@ class CPUScheduler {
                 priorityHeader.style.display = 'table-cell';
             } else {
                 priorityHeader.style.display = 'none';
-            }
+            } // THIS
         }
     }
 
